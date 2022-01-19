@@ -49,10 +49,14 @@
   function update() {
     var elm = document.getElementById("c0")
     elm.textContent = c[0]
+    localStorage.setItem('c0', c[0]);
     var elm = document.getElementById("c1")
     elm.textContent = c[1]
+    localStorage.setItem('c1', c[1]);
   }
   window.onload = function() {
+    c[0] = localStorage.getItem('c0') || 0;
+    c[1] = localStorage.getItem('c1') || 0;
     update()
   }
 </script>
