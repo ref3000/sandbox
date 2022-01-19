@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ボタンテスト</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<style>
+  html, body, div, span, button {
+    margin: 0;
+    padding: 0;
+  }
+  .tile {
+    width: 320px;
+  }
+  .title {
+    display: inline-block;
+    font-size: 16px;
+    text-align: center;
+    width: 160px;
+  }
+  .inc-button {
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+  }
+  .dec-button {
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+  }
+  .count {
+    display: inline-block;
+    font-size: 30px;
+    text-align: center;
+    width: 50px;
+  }
+</style>
+</head>
+<body>
+<script>
+  var c = [0, 1, 2]
+  function dec(i) {
+    c[i]--
+    update()
+  }
+  function inc(i) {
+    c[i]++
+    update()
+  }
+  function update() {
+    var elm = document.getElementById("c0")
+    elm.textContent = c[0]
+    var elm = document.getElementById("c1")
+    elm.textContent = c[1]
+  }
+  window.onload = function() {
+    update()
+  }
+</script>
+<div class="tile">
+  <span id="t0" class="title">あいうえおかきくけこ</span>
+  <button onclick="dec(0)" class="dec-button">-</button>
+  <button onclick="inc(0)" class="inc-button">+</button>
+  <span id="c0" class="count"></span>
+</div>
+<div class="tile">
+  <span id="t1" class="title">あいうえお</span>
+  <button onclick="dec(1)" class="dec-button">-</button>
+  <button onclick="inc(1)" class="dec-button">+</button>
+  <span id="c1" class="count"></span>
+</div>
+</body>
+</html>
