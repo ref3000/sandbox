@@ -8,13 +8,29 @@
     margin: 0;
     padding: 0;
   }
+  header{
+    background: rgb(255, 197, 197);
+    position: fixed;
+    width: 320px;
+    height: 30px;
+  }
+  span {
+    display: inline-block;
+    text-align: center;
+  }
+  .result {
+    width: 48px;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  .header-back {
+    height: 30px;
+  }
   .tile {
     width: 320px;
   }
   .title {
-    display: inline-block;
     font-size: 16px;
-    text-align: center;
     width: 160px;
   }
   .inc-button {
@@ -28,9 +44,7 @@
     font-size: 30px;
   }
   .count {
-    display: inline-block;
     font-size: 30px;
-    text-align: center;
     width: 50px;
   }
 </style>
@@ -60,6 +74,15 @@
     update()
   }
 </script>
+<header>
+  <span id="r1" class="result">1:10%</span>
+  <span id="r2" class="result">2:10%</span>
+  <span id="r3" class="result">3:10%</span>
+  <span id="r4" class="result">4:10%</span>
+  <span id="r5" class="result">5:10%</span>
+  <span id="r6" class="result">6:10%</span>
+</header>
+<div class="header-back"></div>
 <div class="tile">
   <span id="t0" class="title">あいうえおかきくけこ</span>
   <button onclick="dec(0)" class="dec-button">-</button>
@@ -72,5 +95,29 @@
   <button onclick="inc(1)" class="dec-button">+</button>
   <span id="c1" class="count"></span>
 </div>
+<h1>あ</h1>
+<h1>あ</h1>
+<h1>あ</h1>
+<h1>あ</h1>
+<h1>あ</h1>
+<h1>い</h1>
+<h1>い</h1>
+<h1>い</h1>
+<h1>い</h1>
+<h1>う</h1>
+<h1>う</h1>
+<h1>う</h1>
+<h1>う</h1>
+<h1>う</h1>
+<h1>え</h1>
+<h1>え</h1>
+<h1>え</h1>
+<h1>え</h1>
+<h1>え</h1>
+<h1>お</h1>
+<h1>お</h1>
+<h1>お</h1>
+<h1>お</h1>
+<h1>お</h1>
 </body>
 </html>
