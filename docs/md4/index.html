@@ -211,6 +211,10 @@
     }
     update()
   }
+  function reset() {
+    for (i = 0; i < data.length; i++) c[i] = 0;
+    update();
+  }
 </script>
 <header>
   <span class="rt">1:</span><span id="r1" class="result"></span>
@@ -223,5 +227,6 @@
 <div class="header-back"></div>
 <div id="area">
 </div>
+<button onclick="reset()">全てリセット</button>
 </body>
 </html>
