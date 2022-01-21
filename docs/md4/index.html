@@ -176,7 +176,7 @@
     for (i = 0; i < data.length; i++) {
       var elm = document.getElementById("c" + i)
       elm.value = c[i]
-      localStorage.setItem('c' + i, c[i]);
+      // localStorage.setItem('c' + i, c[i]);
     }
 
     var p = [BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1)];
@@ -186,7 +186,7 @@
         p[j] = p[j].times(BigNumber(data[i][j+1]).pow(c[i]))
       }
     }
-    console.log(p)
+    
     window.p = p
     var sum = BigNumber(0);
     for (i = 0; i < 6; i++) sum = sum.plus(p[i]);
@@ -194,6 +194,10 @@
     for (i = 0; i < 6; i++) {
       document.getElementById("r" + (i+1)).textContent = Math.round(p[i].dividedBy(sum).times(1000))/10+"%";
     }
+
+    var hash = "";
+    for (i = 0; i < c.length; i++) hash+=c[i]+",";
+    window.location.hash = hash;
   }
   window.onload = function() {
     var area = document.getElementById("area");
@@ -232,8 +236,18 @@
       area.appendChild(tile);
     }
     for (i = 0; i < data.length; i++) {
-      c[i] = localStorage.getItem('c' + i) || 0;
+      // c[i] = localStorage.getItem('c' + i) || 0;
+      c[i] = 0;
     }
+    var hash = window.location.hash
+    if (hash) {
+      if (hash.substring(0, 1) === '#') hash = hash.slice(1);
+      var toks = hash.split(',')
+      for (i = 0; i < c.length; i++) {
+        if (toks[i]) c[i] = toks[i] - 0;
+      }
+    }
+
     update()
   }
   function reset() {
