@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>bignumber.js のてすと</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<body>
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
+<script>
+function calc() {
+  var begin = Date.now();
+
+  var v1 = document.getElementById("v1").value;
+  var v2 = document.getElementById("v2").value;
+  var n1 = BigNumber(v1);
+  var n2 = BigNumber(v2);
+  var ans = n1.pow(n2);
+
+  var end = Date.now();
+  document.getElementById("time").textContent = "経過時間: " + (end-begin) + "ms";
+  document.getElementById("result").textContent = "計算結果: " + n1 + "^" + n2 + "=" + ans;
+  console.log(end - begin);
+}
+</script>
+<div><input id="v1" type="text" inputmode="numeric" size="30" maxlength="20" value="11111"></div>
+<div><input id="v2" type="text" inputmode="numeric" size="30" maxlength="20" value="2"></div>
+<div><button onclick="calc()">実行</button></div>
+<div id="time"></div>
+<div id="result"></div>
+</body>
+</html>
