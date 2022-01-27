@@ -6,10 +6,11 @@
 <body>
 <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
 <script>
-BigNumber.config({ POW_PRECISION: 100 });
 function calc() {
   var begin = Date.now();
 
+  var c1 = document.getElementById("c1").value - 0;
+  BigNumber.config({ POW_PRECISION: c1 });
   var v1 = document.getElementById("v1").value;
   var v2 = document.getElementById("v2").value;
   var n1 = BigNumber(v1);
@@ -22,8 +23,9 @@ function calc() {
   console.log(end - begin);
 }
 </script>
-<div><input id="v1" type="text" inputmode="numeric" size="30" maxlength="20" value="11111"></div>
-<div><input id="v2" type="text" inputmode="numeric" size="30" maxlength="20" value="2"></div>
+<div>有効桁数<input id="c1" type="text" inputmode="numeric" size="30" maxlength="20" value="100"></div>
+<div>底<input id="v1" type="text" inputmode="numeric" size="30" maxlength="20" value="0.123456789"></div>
+<div>指数<input id="v2" type="text" inputmode="numeric" size="30" maxlength="20" value="9999"></div>
 <div><button onclick="calc()">実行</button></div>
 <div id="time"></div>
 <div id="result"></div>
