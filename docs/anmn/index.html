@@ -141,7 +141,8 @@
     ["トロフィー キリン",0.000,0.000,0.000,0.000,1.000,1.000,"#eeeeee"],
     ["トロフィー 虹",0.000,0.000,0.000,0.000,0.000,1.000,"#eeeeee"],
   ]
-  var c = []
+  var c = [];
+  var memo = new Map();
   function dec(i) {
     if (c[i] < 1) return
     c[i]--
@@ -156,6 +157,11 @@
     c[i] = v
     update()
   }
+  function pow(i, j, c) {
+    var key = i + ":" + j + ":" + c;
+    if (!memo[key]) memo[key] = BigNumber(data[i][j]).pow(c);
+    return memo[key];
+  }
   function update() {
     for (i = 0; i < data.length; i++) {
       var elm = document.getElementById("c" + i)
@@ -167,14 +173,12 @@
     for (i = 0; i < data.length; i++) {
       if (c[i] < 1) continue;
       for (j = 0; j < 6; j++) {
-        p[j] = p[j].times(BigNumber(data[i][j+1]).pow(c[i]))
+        p[j] = p[j].times(pow(i, j+1, c[i]))
       }
     }
     
-    window.p = p
     var sum = BigNumber(0);
     for (i = 0; i < 6; i++) sum = sum.plus(p[i]);
-    window.sum = sum
     for (i = 0; i < 6; i++) {
       document.getElementById("r" + (i+1)).textContent = Math.round(p[i].dividedBy(sum).times(1000))/10+"%";
     }
