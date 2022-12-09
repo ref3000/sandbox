@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>まど4</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<style>
+  html, body, div, span, button {
+    margin: 0;
+    padding: 0;
+  }
+  header{
+    background: rgb(255, 197, 197);
+    position: fixed;
+    width: 320px;
+    height: 30px;
+  }
+  span {
+    display: inline-block;
+    text-align: center;
+  }
+  .rt {
+    width: 13px;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  .result {
+    width: 34px;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .header-back {
+    height: 30px;
+  }
+  .tile {
+    width: 320px;
+    height: 40px;
+    white-space: nowrap;
+  }
+  .title {
+    font-size: 16px;
+    width: 160px;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: top;
+  }
+  .inc-button {
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    -webkit-appearance: none;
+  }
+  .dec-button {
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    -webkit-appearance: none;
+  }
+  .count {
+    font-size: 30px;
+    width: 72px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    text-align: center;
+    border-radius: 0;
+  }
+</style>
+</head>
+<body>
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
+<script>
+  var data = [
+    ["通常レア役解除",0,0,0,0,0,0,"#ffffff"],
+    ["スイカ MC当選",0.1800,0.1800,0.2500,0.2500,0.3000,0.3000,"#eeffee"],
+    ["スイカ MC外れ",0.8190,0.8190,0.7490,0.7490,0.6990,0.6990,"#eeffee"],
+    ["低確チャ目 AT当選",0.0980,0.0980,0.0980,0.1250,0.1880,0.1880,"#ffeeff"],
+    ["低確チャ目 AT外れ",0.9020,0.9020,0.9020,0.8750,0.8120,0.8120,"#ffeeff"],
+    ["低確強チ強ベ AT当選",0.2030,0.2030,0.2030,0.2540,0.2540,0.2540,"#ffeeee"],
+    ["低確強チ強ベ AT外れ",0.7970,0.7970,0.7970,0.7460,0.7460,0.7460,"#ffeeee"],
+    ["1/4高確チャ目 AT当選",0.12325,0.12325,0.12325,0.14950,0.20450,0.20450,"#ffeeff"],
+    ["1/4高確チャ目 AT外れ",0.87675,0.87675,0.87675,0.85050,0.79550,0.79550,"#ffeeff"],
+    ["1/4高確強チ強ベ AT当選",0.27725,0.27725,0.27725,0.31550,0.31550,0.31550,"#ffeeee"],
+    ["1/4高確強チ強ベ AT外れ",0.72275,0.72275,0.72275,0.68450,0.68450,0.68450,"#ffeeee"],
+    ["高確チャ目 AT当選",0.1990,0.1990,0.1990,0.2230,0.2540,0.2540,"#ffeeff"],
+    ["高確チャ目 AT外れ",0.8010,0.8010,0.8010,0.7770,0.7460,0.7460,"#ffeeff"],
+    ["通常G数解除",0,0,0,0,0,0,"#ffffff"],
+    ["通常 100-149G 当選",0.1998,0.2000,0.2000,0.2048,0.2050,0.2048,"#eeeeee"],
+    ["通常 100-149G 通過",0.8002,0.8000,0.8000,0.7952,0.7950,0.7952,"#dddddd"],
+    ["通常 150-199G 当選",0.0163,0.0163,0.0163,0.0492,0.0607,0.1023,"#eeeeee"],
+    ["通常 150-199G 通過",0.9837,0.9837,0.9837,0.9508,0.9393,0.8977,"#dddddd"],
+    ["通常 200-249G 当選",0.1824,0.3116,0.3116,0.3240,0.3297,0.4529,"#eeeeee"],
+    ["通常 200-249G 通過",0.8176,0.6884,0.6884,0.6760,0.6703,0.5471,"#dddddd"],
+    ["通常 250-299G 当選",0.0156,0.0315,0.0315,0.0334,0.0341,0.0566,"#eeeeee"],
+    ["通常 250-299G 通過",0.9844,0.9685,0.9685,0.9666,0.9659,0.9434,"#dddddd"],
+    ["通常 300-349G 当選",0.0254,0.0307,0.0307,0.0996,0.1019,0.1471,"#eeeeee"],
+    ["通常 300-349G 通過",0.9746,0.9693,0.9693,0.9004,0.8981,0.8529,"#dddddd"],
+    ["通常 350-399G 当選",0.0228,0.0277,0.0277,0.0926,0.1157,0.2684,"#eeeeee"],
+    ["通常 350-399G 通過",0.9772,0.9723,0.9723,0.9074,0.8843,0.7316,"#dddddd"],
+    ["通常 400-449G 当選",0.4542,0.5000,0.5000,0.4801,0.4869,0.5983,"#eeeeee"],
+    ["通常 400-449G 通過",0.5458,0.5000,0.5000,0.5199,0.5131,0.4017,"#dddddd"],
+    ["通常 450-499G 当選",0.0610,0.0691,0.0691,0.0622,0.0612,0.0870,"#eeeeee"],
+    ["通常 450-499G 通過",0.9390,0.9309,0.9309,0.9378,0.9388,0.9130,"#dddddd"],
+    ["通常 500-549G 当選",0.0519,0.0699,0.0699,0.2755,0.2935,0.7024,"#eeeeee"],
+    ["通常 500-549G 通過",0.9481,0.9301,0.9301,0.7245,0.7065,0.2976,"#dddddd"],
+    ["通常 550-599G 当選",0.0034,0.0047,0.0047,0.0282,0.0308,0.1600,"#eeeeee"],
+    ["通常 550-599G 通過",0.9966,0.9953,0.9953,0.9718,0.9692,0.8400,"#dddddd"],
+    ["通常 600-649G 当選",0.9347,0.9340,0.9340,0.9348,0.9365,0.9524,"#eeeeee"],
+    ["通常 600-649G 通過",0.0653,0.0660,0.0660,0.0652,0.0635,0.0476,"#dddddd"],
+    ["セリフ系",0,0,0,0,0,0,"#ffffff"],
+    ["AT後セリフ 油断",0.4640,0.4030,0.3630,0.3410,0.3050,0.2980,"#eeffff"],
+    ["AT後セリフ 一緒",0.4110,0.3720,0.3490,0.3550,0.3300,0.3360,"#eeffff"],
+    ["AT後セリフ 君は",0.1250,0.1250,0.1880,0.1880,0.2500,0.2500,"#eeffff"],
+    ["AT後セリフ 犠牲",0.0000,0.1000,0.1000,0.1000,0.1000,0.1000,"#eeffff"],
+    ["AT後セリフ 奇跡",0.0000,0.0000,0.0000,0.0160,0.0160,0.0120,"#eeffff"],
+    ["AT後セリフ 祈り",0.0000,0.0000,0.0000,0.0000,0.0000,0.0040,"#eeffff"],
+    ["BB後セリフ 油断",0.4640,0.4550,0.3570,0.3430,0.2780,0.2720,"#eeeeff"],
+    ["BB後セリフ 一緒",0.4110,0.4200,0.3430,0.3570,0.3010,0.3060,"#eeeeff"],
+    ["BB後セリフ 君は",0.1250,0.1250,0.2000,0.2000,0.2750,0.2750,"#eeeeff"],
+    ["BB後セリフ 犠牲",0.0000,0.0000,0.1000,0.1000,0.1000,0.1000,"#eeeeff"],
+    ["BB後セリフ 奇跡",0.0000,0.0000,0.0000,0.0000,0.0470,0.0310,"#eeeeff"],
+    ["BB後セリフ 祈り",0.0000,0.0000,0.0000,0.0000,0.0000,0.0160,"#eeeeff"],
+    ["AT関連",0,0,0,0,0,0,"#ffffff"],
+    ["AT開始 謎プル当選",0.0940,0.0980,0.1170,0.1170,0.1330,0.1450,"#ffffee"],
+    ["AT開始 謎プル外れ",0.9060,0.9020,0.8830,0.8830,0.8670,0.8550,"#ffffee"],
+    ["AT弱チェ MA当選",0.1800,0.1840,0.1950,0.1950,0.2030,0.2110,"#ffeeee"],
+    ["AT弱チェ MA外れ",0.8200,0.8160,0.8050,0.8050,0.7970,0.7890,"#ffeeee"],
+    ["ATチャ目 MA当選",0.3870,0.4020,0.4260,0.4260,0.4450,0.4570,"#ffeeff"],
+    ["ATチャ目 MA外れ",0.6130,0.5980,0.5740,0.5740,0.5550,0.5430,"#ffeeff"],
+    ["ATスイカ MB当選",0.1680,0.1720,0.1760,0.1760,0.1840,0.1880,"#eeffee"],
+    ["ATスイカ MB外れ",0.8320,0.8280,0.8240,0.8240,0.8160,0.8120,"#eeffee"],
+    ["完走関連",0,0,0,0,0,0,"#ffffff"],
+    ["カードLv1 さや",0.4870,0.3190,0.4500,0.3000,0.4310,0.2880,"#eeeeee"],
+    ["カードLv1 マミ",0.3250,0.4780,0.3000,0.4500,0.2880,0.4310,"#eeeeee"],
+    ["カードLv1 杏子",0.1880,0.1880,0.2190,0.2190,0.2500,0.2500,"#eeeeee"],
+    ["カードLv1 ほむ",0.0000,0.0160,0.0160,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv1 まど",0.0000,0.0000,0.0160,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv2 さや",0.4870,0.3190,0.4500,0.2940,0.4220,0.2810,"#eeeeee"],
+    ["カードLv2 マミ",0.3250,0.4780,0.3000,0.4410,0.2810,0.4220,"#eeeeee"],
+    ["カードLv2 杏子",0.1880,0.1880,0.2340,0.2340,0.2660,0.2660,"#eeeeee"],
+    ["カードLv2 ほむ",0.0000,0.0160,0.0160,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv2 まど",0.0000,0.0000,0.0000,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv3 さや",0.4870,0.3250,0.4410,0.2880,0.4130,0.2750,"#eeeeee"],
+    ["カードLv3 マミ",0.3250,0.4870,0.2940,0.4310,0.2750,0.4130,"#eeeeee"],
+    ["カードLv3 杏子",0.1880,0.1880,0.2500,0.2500,0.2810,0.2810,"#eeeeee"],
+    ["カードLv3 ほむ",0.0000,0.0000,0.0160,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv3 まど",0.0000,0.0000,0.0000,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv4 さや",0.4870,0.3250,0.4310,0.2880,0.4030,0.2690,"#eeeeee"],
+    ["カードLv4 マミ",0.3250,0.4870,0.2880,0.4310,0.2690,0.4030,"#eeeeee"],
+    ["カードLv4 杏子",0.1880,0.1880,0.2660,0.2660,0.2970,0.2970,"#eeeeee"],
+    ["カードLv4 ほむ",0.0000,0.0000,0.0160,0.0160,0.0160,0.0160,"#eeeeee"],
+    ["カードLv4 まど",0.0000,0.0000,0.0000,0.0000,0.0160,0.0160,"#eeeeee"],
+    ["カードLv5 さや",0.4870,0.3250,0.4130,0.2750,0.3940,0.2560,"#eeeeee"],
+    ["カードLv5 マミ",0.3250,0.4870,0.2750,0.4130,0.2630,0.3840,"#eeeeee"],
+    ["カードLv5 杏子",0.1880,0.1880,0.2810,0.2810,0.3130,0.3130,"#eeeeee"],
+    ["カードLv5 ほむ",0.0000,0.0000,0.0310,0.0310,0.0310,0.0310,"#eeeeee"],
+    ["カードLv5 まど",0.0000,0.0000,0.0000,0.0000,0.0000,0.0160,"#eeeeee"],
+    ["EDスイカ さや",0.0000,0.0040,0.0040,0.0040,0.0040,0.0040,"#eeffee"],
+    ["EDスイカ マミ",0.0000,0.0000,0.0040,0.0040,0.0040,0.0040,"#eeffee"],
+    ["EDスイカ 杏子",0.0000,0.0000,0.0000,0.0040,0.0040,0.0040,"#eeffee"],
+    ["EDスイカ ほむ",0.0000,0.0000,0.0000,0.0000,0.0040,0.0040,"#eeffee"],
+    ["EDスイカ まど",0.0000,0.0000,0.0000,0.0000,0.0000,0.0040,"#eeffee"],
+    ["ED強レア さや",0.5840,0.4000,0.5340,0.4000,0.4980,0.4000,"#ffeeff"],
+    ["ED強レア マミ",0.4000,0.5690,0.4000,0.5180,0.4000,0.4610,"#ffeeff"],
+    ["ED強レア 杏子",0.0160,0.0160,0.0500,0.0630,0.0780,0.1000,"#ffeeff"],
+    ["ED強レア ほむ",0.0000,0.0160,0.0160,0.0160,0.0160,0.0160,"#ffeeff"],
+    ["ED強レア まど",0.0000,0.0000,0.0000,0.0040,0.0080,0.0230,"#ffeeff"],
+  ]
+  var c = []
+  function dec(i) {
+    if (c[i] < 1) return
+    c[i]--
+    update()
+  }
+  function inc(i) {
+    c[i]++
+    update()
+  }
+  function set(i, v) {
+    if (v < 0) return
+    c[i] = v
+    update()
+  }
+  function update() {
+    for (i = 0; i < data.length; i++) {
+      var elm = document.getElementById("c" + i)
+      elm.value = c[i]
+      // localStorage.setItem('c' + i, c[i]);
+    }
+
+    var p = [BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1), BigNumber(1)];
+    for (i = 0; i < data.length; i++) {
+      if (c[i] < 1) continue;
+      for (j = 0; j < 6; j++) {
+        p[j] = p[j].times(BigNumber(data[i][j+1]).pow(c[i]))
+      }
+    }
+    
+    window.p = p
+    var sum = BigNumber(0);
+    for (i = 0; i < 6; i++) sum = sum.plus(p[i]);
+    window.sum = sum
+    for (i = 0; i < 6; i++) {
+      document.getElementById("r" + (i+1)).textContent = Math.round(p[i].dividedBy(sum).times(1000))/10+"%";
+    }
+
+    var hash = "";
+    for (i = 0; i < c.length; i++) hash+=c[i]+",";
+    window.location.hash = hash;
+  }
+  window.onload = function() {
+    var area = document.getElementById("area");
+    for (i = 0; i < data.length; i++) {
+      var tile = document.createElement("div");
+      tile.className = "tile";
+      if (data[i][7]) tile.style = "background-color: " + data[i][7];
+      var t = document.createElement("span");
+      t.id = "t" + i;
+      t.className = "title";
+      t.textContent = data[i][0];
+      var db = document.createElement("button");
+      db.id = "db" + i;
+      db.className = "dec-button";
+      db.onclick = function(e) { dec(e.target.id.slice(2) - 0) };
+      db.textContent = "-";
+      var ib = document.createElement("button");
+      ib.id = "ib" + i;
+      ib.className = "inc-button";
+      ib.onclick = function(e) { inc(e.target.id.slice(2) - 0) };
+      ib.textContent = "+";
+      var count = document.createElement("input");
+      count.id = "c" + i;
+      count.className = "count";
+      count.type = "text";
+      count.inputMode = "numeric";
+      count.onchange = function(e) { set(e.target.id.slice(1) - 0, e.target.value - 0) };
+      tile.appendChild(t);
+      if (!data[i][1]&&!data[i][2]&&!data[i][3]&&!data[i][4]&&!data[i][5]&&!data[i][6]) {
+        count.style = "visibility:hidden";
+      } else {
+        tile.appendChild(db);
+        tile.appendChild(ib);
+      }
+      tile.appendChild(count);
+      area.appendChild(tile);
+    }
+    for (i = 0; i < data.length; i++) {
+      // c[i] = localStorage.getItem('c' + i) || 0;
+      c[i] = 0;
+    }
+    var hash = window.location.hash
+    if (hash) {
+      if (hash.substring(0, 1) === '#') hash = hash.slice(1);
+      var toks = hash.split(',')
+      for (i = 0; i < c.length; i++) {
+        if (toks[i]) c[i] = toks[i] - 0;
+      }
+    }
+
+    update()
+  }
+  function reset() {
+    for (i = 0; i < data.length; i++) c[i] = 0;
+    update();
+  }
+</script>
+<header>
+  <span class="rt">1:</span><span id="r1" class="result"></span>
+  <span class="rt">2:</span><span id="r2" class="result"></span>
+  <span class="rt">3:</span><span id="r3" class="result"></span>
+  <span class="rt">4:</span><span id="r4" class="result"></span>
+  <span class="rt">5:</span><span id="r5" class="result"></span>
+  <span class="rt">6:</span><span id="r6" class="result"></span>
+</header>
+<div class="header-back"></div>
+<div id="area">
+</div>
+<button onclick="reset()">全てリセット</button>
+</body>
+</html>
