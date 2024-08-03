@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>L</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<style>
+  html, body, div, span, button {
+    margin: 0;
+    padding: 0;
+  }
+  button {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .b-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 8px;
+  }
+  .b-blue {
+    background-color: #a0d8ef;
+  }
+  .b-green {
+    background-color: #83b85d;
+  }
+  .b-red {
+    background-color: #f69ea1;
+  }
+  .b-yellow {
+    background-color: #dcd15f;
+  }
+  .b-c1 {
+    background-color: #cccccc;
+  }
+  .b-c2 {
+    background-color: #dddddd;
+  }
+  .b-c3 {
+    background-color: #eeeeee;
+  }
+  .table-container {
+            width: 100%;
+            margin: 20px auto;
+        }
+  table {
+    width: 100%;
+    margin-top: 8px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px 0 12px 0;
+    text-align: center;
+    /* word-wrap: break-word; */
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+</style>
+</head>
+<body>
+<div>
+  <button onclick="reset()" class="b-c1">Reset</button>
+</div>
+<div class="b-container">
+  <button onclick="reset()" class="b-blue">リプ</button>
+  <button onclick="reset()" class="b-red">弱チ</button>
+  <button onclick="reset()" class="b-green">弱ス</button>
+  <button onclick="reset()" class="b-yellow">チャ</button>
+  <button onclick="reset()" class="b-green">強ス</button>
+  <button onclick="reset()" class="b-red">強チ</button>
+</div>
+<div class="b-container">
+  <button onclick="reset()" class="b-c1">地獄</button>
+  <button onclick="reset()" class="b-c1">地or通</button>
+  <button onclick="reset()" class="b-c2">通常</button>
+  <button onclick="reset()" class="b-c2">通or天</button>
+  <button onclick="reset()" class="b-c3">天国</button>
+  <button onclick="reset()" class="b-c3">本前兆</button>
+</div>
+<div class="table-container">
+  <table id="myTable"></table>
+</div>
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
+<script>
+  const rows = 4;
+  const cols = 6;
+  const array = Array.from({ length: rows }, () => Array.from({ length: cols }, () => Math.random()));
+
+  function reset() {
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        array[i][j] = 1;
+      }
+    }
+    generateTable(array);
+  }
+
+  // 表を表示するための関数
+  function generateTable(array) {
+    const headers = ["設定1", "設定2", "設定3", "設定4", "設定5", "設定6"];    
+    const colSums = Array(cols).fill(0);
+    // 各列の合計を計算
+    array.forEach(row => {
+        row.forEach((value, index) => {
+            colSums[index] += value;
+        });
+    });
+    // 各値を列の合計に対する割合（パーセンテージ）に変換
+    for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows; row++) {
+            array[row][col] = (array[row][col] / colSums[col]) * 100;
+        }
+    }
+    const table = document.getElementById("myTable");
+    table.innerHTML = "";  // テーブルをクリア
+    // 表ヘッダーを作成
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    headers.forEach(headerText => {
+        const th = document.createElement("th");
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    // 表内容を作成
+    const tbody = document.createElement("tbody");
+    array.forEach(row => {
+        const tr = document.createElement("tr");
+        row.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = parseFloat(cell).toFixed(2);
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    generateTable(array);
+  });
+</script>
+</body>
+</html>
