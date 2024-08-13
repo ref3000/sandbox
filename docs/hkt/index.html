@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <title>L</title>
 <meta name="viewport" content="width=320,user-scalable=no">
@@ -46,6 +46,7 @@
             margin: 20px auto;
         }
   table {
+    table-layout: fixed;
     width: 100%;
     margin-top: 8px;
     border-collapse: collapse;
@@ -64,19 +65,37 @@
   tr:nth-child(even) {
     background-color: #f9f9f9;
   }
+  .replay {
+    background-color: #a0d8ef;
+  }
+  .suica {
+    background-color: #83b85d;
+  }
+  .suicaF {
+    background-color: #83b85d;
+  }
+  .cherry {
+    background-color: #f69ea1;
+  }
+  .cherryF {
+    background-color: #f69ea1;
+  }
+  .chance {
+    background-color: #dcd15f;
+  }
 </style>
 </head>
 <body>
 <div>
-  <button onclick="reset()" class="b-c1">Reset</button>
+  <button onclick="onReset()" class="b-c1">Reset</button>
 </div>
 <div class="b-container">
-  <button onclick="reset()" class="b-blue">リプ</button>
-  <button onclick="reset()" class="b-red">弱チ</button>
-  <button onclick="reset()" class="b-green">弱ス</button>
-  <button onclick="reset()" class="b-yellow">チャ</button>
-  <button onclick="reset()" class="b-green">強ス</button>
-  <button onclick="reset()" class="b-red">強チ</button>
+  <button onclick="onReplay()" class="b-blue">リプ</button>
+  <button onclick="onCherry()" class="b-red">弱チ</button>
+  <button onclick="onSuica()" class="b-green">弱ス</button>
+  <button onclick="onChance()" class="b-yellow">チャ</button>
+  <button onclick="onSuicaF()" class="b-green">強ス</button>
+  <button onclick="onCherryF()" class="b-red">強チ</button>
 </div>
 <div class="b-container">
   <button onclick="reset()" class="b-c1">地獄</button>
@@ -87,67 +106,138 @@
   <button onclick="reset()" class="b-c3">本前兆</button>
 </div>
 <div class="table-container">
-  <table id="myTable"></table>
+  <table id="table"></table>
 </div>
+<div id="history"></div>
 <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
 <script>
-  const rows = 4;
-  const cols = 6;
-  const array = Array.from({ length: rows }, () => Array.from({ length: cols }, () => Math.random()));
+  const S = 5; // 設定
+  const M = 4; // モード
+  const array = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
+  const history = [];
 
-  function reset() {
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        array[i][j] = 1;
+  function onReset() {
+    for (let s = 0; s < S; s++) {
+      for (let m = 0; m < M-1; m++) {
+        array[s][m] = BigNumber(1);
       }
     }
-    generateTable(array);
+    history.splice(0);
+    updateTable();
+    updateHistory();
   }
 
-  // 表を表示するための関数
-  function generateTable(array) {
-    const headers = ["設定1", "設定2", "設定3", "設定4", "設定5", "設定6"];    
-    const colSums = Array(cols).fill(0);
-    // 各列の合計を計算
-    array.forEach(row => {
-        row.forEach((value, index) => {
-            colSums[index] += value;
-        });
-    });
-    // 各値を列の合計に対する割合（パーセンテージ）に変換
-    for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows; row++) {
-            array[row][col] = (array[row][col] / colSums[col]) * 100;
-        }
-    }
-    const table = document.getElementById("myTable");
-    table.innerHTML = "";  // テーブルをクリア
-    // 表ヘッダーを作成
+  function apply(t) {
+    history.push("replay");
+    updateTable();
+    updateHistory();
+  }
+
+  function onReplay() {
+    // for (let s = 0; s < S; s++) {
+    //   for (let m = 0; m < M; m++) {
+    //     array[s][m] = array[s][m];
+    //   }
+    // }
+    apply("replay");
+  }
+
+  function onSuica() {
+    history.push("suica");
+    updateTable();
+    updateHistory();
+  }
+
+  function onSuicaF() {
+    history.push("suicaF");
+    updateTable();
+    updateHistory();
+  }
+
+  function onChance() {
+    history.push("chance");
+    updateTable();
+    updateHistory();
+  }
+
+  function onCherry() {
+    history.push("cherry");
+    updateTable();
+    updateHistory();
+  }
+
+  function onCherryF() {
+    history.push("cherryF");
+    updateTable();
+    updateHistory();
+  }
+
+  // テーブルの更新
+  function updateTable() {
+    // テーブルをクリア
+    const headers = ["", "設定1", "設定2", "設定4", "設定5", "設定6"];    
+    const table = document.getElementById("table");
+    table.innerHTML = "";
+    // ヘッダーを作成
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     headers.forEach(headerText => {
-        const th = document.createElement("th");
-        th.textContent = headerText;
-        headerRow.appendChild(th);
+      const th = document.createElement("th");
+      th.textContent = headerText;
+      headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
     table.appendChild(thead);
     // 表内容を作成
+    contents = Array.from({ length: 4 }, () => Array.from({ length: 6 }, () => ""));
+    contents[0][0] = "地獄";
+    contents[1][0] = "通常";
+    contents[2][0] = "天国";
+    contents[3][0] = "本前兆";
+    for (let s = 0; s < S; s++) {
+      let sum = BigNumber(0);
+      for (let m = 0; m < M; m++) {
+        sum = sum.plus(array[s][m]);
+      }
+      for (let m = 0; m < M; m++) {
+        if (sum==0) {
+          contents[m][s+1] = "0 %";
+        } else {
+          const p = array[s][m].dividedBy(sum).times(100).toFixed(2)
+          contents[m][s+1] = p + "%";
+        }
+      }
+    }
+    // テーブルの更新
     const tbody = document.createElement("tbody");
-    array.forEach(row => {
-        const tr = document.createElement("tr");
-        row.forEach(cell => {
-            const td = document.createElement("td");
-            td.textContent = parseFloat(cell).toFixed(2);
-            tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-    });
+    for (y = 0; y < 4; y++) {
+      const tr = document.createElement("tr");
+      for (x = 0; x < 6; x++) {
+        const td = document.createElement("td");
+        td.textContent = contents[y][x];
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
     table.appendChild(tbody);
   }
 
+  function updateHistory() {
+    // 履歴をクリア  
+    const historyElm = document.getElementById("history");
+    historyElm.innerHTML = "";
+    // 履歴を作成
+    for (i = 0; i < history.length; i++) {
+      const h = history[history.length - i - 1];
+      const div = document.createElement("div");
+      div.textContent = h;
+      div.classList.add(h);
+      historyElm.appendChild(div);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function() {
-    generateTable(array);
+    updateTable();
   });
 </script>
 </body>
