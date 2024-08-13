@@ -90,20 +90,20 @@
   <button onclick="onReset()" class="b-c1">Reset</button>
 </div>
 <div class="b-container">
-  <button onclick="onReplay()" class="b-blue">リプ</button>
-  <button onclick="onCherry()" class="b-red">弱チ</button>
-  <button onclick="onSuica()" class="b-green">弱ス</button>
-  <button onclick="onChance()" class="b-yellow">チャ</button>
-  <button onclick="onSuicaF()" class="b-green">強ス</button>
-  <button onclick="onCherryF()" class="b-red">強チ</button>
+  <button onclick="apply('replay')" class="b-blue">リプ</button>
+  <button onclick="apply('cherry')" class="b-red">弱チ</button>
+  <button onclick="apply('suica')" class="b-green">弱ス</button>
+  <button onclick="apply('chance')" class="b-yellow">チャ</button>
+  <button onclick="apply('suicaF')" class="b-green">強ス</button>
+  <button onclick="apply('cherryF')" class="b-red">強チ</button>
 </div>
 <div class="b-container">
-  <button onclick="reset()" class="b-c1">地獄</button>
-  <button onclick="reset()" class="b-c1">地or通</button>
-  <button onclick="reset()" class="b-c2">通常</button>
-  <button onclick="reset()" class="b-c2">通or天</button>
-  <button onclick="reset()" class="b-c3">天国</button>
-  <button onclick="reset()" class="b-c3">本前兆</button>
+  <button onclick="check([1, 0, 0, 0])" class="b-c1">地獄</button>
+  <button onclick="check([1, 1, 0, 0])" class="b-c1">地or通</button>
+  <button onclick="check([0, 1, 0, 0])" class="b-c2">通常</button>
+  <button onclick="check([0, 1, 1, 0])" class="b-c2">通or天</button>
+  <button onclick="check([0, 0, 1, 0])" class="b-c3">天国</button>
+  <button onclick="check([0, 0, 0, 1])" class="b-c3">本前兆</button>
 </div>
 <div class="table-container">
   <table id="table"></table>
@@ -117,9 +117,10 @@
   const history = [];
 
   function onReset() {
+    console.log("onReset");
     for (let s = 0; s < S; s++) {
-      for (let m = 0; m < M-1; m++) {
-        array[s][m] = BigNumber(1);
+      for (let m = 0; m < M; m++) {
+        array[s][m] = m < 3 ? BigNumber(1) : BigNumber(0);
       }
     }
     history.splice(0);
@@ -128,46 +129,231 @@
   }
 
   function apply(t) {
-    history.push("replay");
+    console.log("apply", t);
+    history.push(t);
+    // 設定1の確率遷移 [before_mode, after_mode]
+    // 0 -> 地獄, 1 -> 通常 ... 3 -> 本前兆
+    // p[before, after] = 遷移確率
+    const ppp = [
+      { // 0
+        "replay": [
+          [100, 0, 0, 0],
+          [11.72, 88.28, 0, 0],
+          [7.81, 3.9, 88.28, 0],
+          [0, 0, 0, 100],
+        ],
+        "suica": [
+          [67.58, 30.09, 2, 0.33],
+          [0, 67.23, 31.38, 1.39],
+          [0, 0, 89.34, 10.66],
+          [0, 0, 0, 100],
+        ],
+        "cherry": [
+          [94.03, 5.69, 0.12, 0.15],
+          [0, 95.97, 3.75, 0.28],
+          [0, 0, 98.25, 1.75],
+          [0, 0, 0, 100],
+        ],
+        "chance": [
+          [75.00, 24.19, 0.19, 0.61],
+          [0, 75.00, 23.53, 1.47],
+          [0, 0, 75.0, 25.0],
+          [0, 0, 0, 100],
+        ],
+        "suicaF": [
+          [0, 68.62, 25, 6.38],
+          [0, 0, 89.84, 10.16],
+          [0, 0, 50, 50],
+          [0, 0, 0, 100],
+        ],
+        "cherryF": [
+          [0, 68.75, 6.25, 25.0],
+          [0, 62.5, 12.5, 25.0],
+          [0, 0, 0, 100],
+          [0, 0, 0, 100],
+        ],
+      },
+      { // 1
+        "replay": [
+          [100, 0, 0, 0],
+          [11.72, 88.28, 0, 0],
+          [7.81, 3.9, 88.28, 0],
+          [0, 0, 0, 100],
+        ],
+        "suica": [
+          [67.16, 30.45, 2.01, 0.38],
+          [0, 67.23, 31.38, 1.39],
+          [0, 0, 89.22, 10.78],
+          [0, 0, 0, 100],
+        ],
+        "cherry": [
+          [93.97, 5.74, 0.13, 0.16],
+          [0, 95.80, 3.81, 0.39],
+          [0, 0, 98.15, 1.85],
+          [0, 0, 0, 100],
+        ],
+        "chance": [
+          [74.78, 24.17, 0.19, 0.87],
+          [0, 74.41, 24.08, 1.50],
+          [0, 0, 75.0, 25.0],
+          [0, 0, 0, 100],
+        ],
+        "suicaF": [
+          [0, 68.52, 25, 6.48],
+          [0, 0, 89.84, 10.16],
+          [0, 0, 50, 50],
+          [0, 0, 0, 100],
+        ],
+        "cherryF": [
+          [0, 68.75, 6.25, 25.0],
+          [0, 62.5, 12.5, 25.0],
+          [0, 0, 0, 100],
+          [0, 0, 0, 100],
+        ],
+      },
+      { // 2
+        "replay": [
+          [100, 0, 0, 0],
+          [11.72, 88.28, 0, 0],
+          [7.81, 3.9, 88.28, 0],
+          [0, 0, 0, 100],
+        ],
+        "suica": [
+          [56.26, 40.06, 2.67, 1.01],
+          [0, 56.23, 40.13, 3.64],
+          [0, 0, 83.98, 16.02],
+          [0, 0, 0, 100],
+        ],
+        "cherry": [
+          [91.85, 7.63, 0.17, 0.35],
+          [0, 93.58, 4.93, 1.49],
+          [0, 0, 96.13, 3.87],
+          [0, 0, 0, 100],
+        ],
+        "chance": [
+          [73.69, 23.18, 0.19, 2.94],
+          [0, 74.13, 23.87, 2.00],
+          [0, 0, 75.0, 25.0],
+          [0, 0, 0, 100],
+        ],
+        "suicaF": [
+          [0, 67.86, 25, 7.14],
+          [0, 0, 89.84, 10.16],
+          [0, 0, 50, 50],
+          [0, 0, 0, 100],
+        ],
+        "cherryF": [
+          [0, 68.75, 6.25, 25.0],
+          [0, 62.5, 12.5, 25.0],
+          [0, 0, 0, 100],
+          [0, 0, 0, 100],
+        ],
+      },
+      { // 3
+        "replay": [
+          [100, 0, 0, 0],
+          [11.72, 88.28, 0, 0],
+          [7.81, 3.9, 88.28, 0],
+          [0, 0, 0, 100],
+        ],
+        "suica": [
+          [55.11, 40.21, 2.66, 2.01],
+          [0, 55.14, 39.80, 5.06],
+          [0, 0, 82.14, 17.86],
+          [0, 0, 0, 100],
+        ],
+        "cherry": [
+          [91.36, 7.78, 0.17, 0.69],
+          [0, 92.20, 4.90, 2.90],
+          [0, 0, 94.57, 5.43],
+          [0, 0, 0, 100],
+        ],
+        "chance": [
+          [72.39, 21.94, 0.19, 5.48],
+          [0, 73.92, 23.61, 2.47],
+          [0, 0, 75.0, 25.0],
+          [0, 0, 0, 100],
+        ],
+        "suicaF": [
+          [0, 66.52, 25, 8.48],
+          [0, 0, 89.84, 10.16],
+          [0, 0, 50, 50],
+          [0, 0, 0, 100],
+        ],
+        "cherryF": [
+          [0, 68.75, 6.25, 25.0],
+          [0, 62.5, 12.5, 25.0],
+          [0, 0, 0, 100],
+          [0, 0, 0, 100],
+        ],
+      },
+      { // 4
+        "replay": [
+          [100, 0, 0, 0],
+          [11.72, 88.28, 0, 0],
+          [7.81, 3.9, 88.28, 0],
+          [0, 0, 0, 100],
+        ],
+        "suica": [
+          [53.92, 40.69, 2.71, 2.68],
+          [0, 53.88, 40.09, 6.03],
+          [0, 0, 80.84, 19.16],
+          [0, 0, 0, 100],
+        ],
+        "cherry": [
+          [90.82, 7.92, 0.18, 1.08],
+          [0, 91.12, 4.97, 3.91],
+          [0, 0, 92.86, 7.14],
+          [0, 0, 0, 100],
+        ],
+        "chance": [
+          [71.76, 21.31, 0.19, 6.74],
+          [0, 73.72, 23.42, 2.86],
+          [0, 0, 75.0, 25.0],
+          [0, 0, 0, 100],
+        ],
+        "suicaF": [
+          [0, 65.93, 25, 9.07],
+          [0, 0, 89.84, 10.16],
+          [0, 0, 50, 50],
+          [0, 0, 0, 100],
+        ],
+        "cherryF": [
+          [0, 68.75, 6.25, 25.0],
+          [0, 62.5, 12.5, 25.0],
+          [0, 0, 0, 100],
+          [0, 0, 0, 100],
+        ],
+      },
+    ];
+    for (let s = 0; s < S; s++) {
+      const p = ppp[s][t];
+      const before = array[s];
+      const after = Array.from({ length: M }, () => BigNumber(0));
+      for (let mb = 0; mb < M; mb++) {
+        for (let ma = 0; ma < M; ma++) {
+          after[ma] = after[ma].plus(before[mb].times(p[mb][ma]));
+        }
+      }
+      array[s] = after;
+    }
     updateTable();
     updateHistory();
   }
 
-  function onReplay() {
-    // for (let s = 0; s < S; s++) {
-    //   for (let m = 0; m < M; m++) {
-    //     array[s][m] = array[s][m];
-    //   }
-    // }
-    apply("replay");
-  }
-
-  function onSuica() {
-    history.push("suica");
-    updateTable();
-    updateHistory();
-  }
-
-  function onSuicaF() {
-    history.push("suicaF");
-    updateTable();
-    updateHistory();
-  }
-
-  function onChance() {
-    history.push("chance");
-    updateTable();
-    updateHistory();
-  }
-
-  function onCherry() {
-    history.push("cherry");
-    updateTable();
-    updateHistory();
-  }
-
-  function onCherryF() {
-    history.push("cherryF");
+  function check(p) {
+    for (let s = 0; s < S; s++) {
+      let sum = 0;
+      for (let m = 0; m < M; m++) {
+        if (!p[m]) array[s][m] = BigNumber(0);
+        sum += array[s][m].toNumber();
+      }
+      if (!sum) {
+        for (let m = 0; m < M; m++) {
+          if (p[m]) array[s][m] = BigNumber(1);
+        }
+      }
+    }
     updateTable();
     updateHistory();
   }
@@ -237,7 +423,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    updateTable();
+    onReset();
   });
 </script>
 </body>
