@@ -88,6 +88,7 @@
 <body>
 <div>
   <button onclick="onReset()" class="b-c1">Reset</button>
+  <button onclick="onResetAT()" class="b-c1">AT終了</button>
 </div>
 <div class="b-container">
   <button onclick="apply('replay')" class="b-blue">リプ</button>
@@ -98,12 +99,12 @@
   <button onclick="apply('cherryF')" class="b-red">強チ</button>
 </div>
 <div class="b-container">
-  <button onclick="check([1, 0, 0, 0])" class="b-c1">地獄</button>
-  <button onclick="check([1, 1, 0, 0])" class="b-c1">地or通</button>
-  <button onclick="check([0, 1, 0, 0])" class="b-c2">通常</button>
-  <button onclick="check([0, 1, 1, 0])" class="b-c2">通or天</button>
-  <button onclick="check([0, 0, 1, 0])" class="b-c3">天国</button>
-  <button onclick="check([0, 0, 0, 1])" class="b-c3">本前兆</button>
+  <button onclick="check('地獄↓', [1, 0, 0, 0])" class="b-c1">地獄↓</button>
+  <button onclick="check('通常↓', [1, 1, 0, 0])" class="b-c1">通常↓</button>
+  <button onclick="check('天国↓', [1, 1, 1, 0])" class="b-c1">天国↓</button>
+  <button onclick="check('通常↑', [0, 1, 1, 1])" class="b-c2">通常↑</button>
+  <button onclick="check('天国↑', [0, 0, 1, 1])" class="b-c2">天国↑</button>
+  <button onclick="check('本前兆', [0, 0, 0, 1])" class="b-c3">本前兆</button>
 </div>
 <div class="table-container">
   <table id="table"></table>
@@ -117,10 +118,34 @@
   const history = [];
 
   function onReset() {
-    console.log("onReset");
+    const p = [
+      [48.7, 33.1, 17.6, 0.6],
+      [47.6, 33.5, 18.3, 0.6],
+      [39.2, 36.3, 23.5, 1.1],
+      [35.0, 37.8, 26.1, 1.2],
+      [30.0, 40.8, 27.9, 1.3],
+    ];
     for (let s = 0; s < S; s++) {
       for (let m = 0; m < M; m++) {
-        array[s][m] = m < 3 ? BigNumber(1) : BigNumber(0);
+        array[s][m] = BigNumber(p[s][m]);
+      }
+    }
+    history.splice(0);
+    updateTable();
+    updateHistory();
+  }
+
+  function onResetAT() {
+    const p = [
+      [42.2, 31.3, 25.8, 0.7],
+      [42.0, 31.5, 25.8, 0.7],
+      [37.5, 31.5, 30.2, 0.7],
+      [34.2, 31.2, 33.8, 0.7],
+      [31.6, 31.8, 35.9, 0.7],
+    ];
+    for (let s = 0; s < S; s++) {
+      for (let m = 0; m < M; m++) {
+        array[s][m] = BigNumber(p[s][m]);
       }
     }
     history.splice(0);
@@ -129,7 +154,6 @@
   }
 
   function apply(t) {
-    console.log("apply", t);
     history.push(t);
     // 設定1の確率遷移 [before_mode, after_mode]
     // 0 -> 地獄, 1 -> 通常 ... 3 -> 本前兆
@@ -341,7 +365,8 @@
     updateHistory();
   }
 
-  function check(p) {
+  function check(t, p) {
+    history.push(t);
     for (let s = 0; s < S; s++) {
       let sum = 0;
       for (let m = 0; m < M; m++) {
