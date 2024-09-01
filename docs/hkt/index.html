@@ -114,6 +114,14 @@
   .chance {
     background-color: #dcd15f;
   }
+  .bt-wrap {
+    float: right;
+  }
+  .history-bt {
+    width: 22px;
+    height: 22px;
+    vertical-align: top;
+  }
 </style>
 </head>
 <body>
@@ -157,6 +165,10 @@
   const history = [];
   const sr = Array.from({ length: S }, () => BigNumber(1));
 
+  function calcHistory() {
+    console.log(history);
+  }
+
   function onReset() {
     const p = [
       [48.7, 33.1, 17.6, 0.6],
@@ -170,7 +182,8 @@
         array[s][m] = BigNumber(p[s][m]);
       }
     }
-    history.splice(0);
+    // history.splice(0);
+    history.push('reset');
     updateTable();
     updateHistory();
     updateSR();
@@ -189,7 +202,8 @@
         array[s][m] = BigNumber(p[s][m]);
       }
     }
-    history.splice(0);
+    // history.splice(0);
+    history.push('resetAT');
     updateTable();
     updateHistory();
     updateSR();
@@ -484,16 +498,32 @@
     table.appendChild(tbody);
   }
 
+  function historyDown(i) {
+    if (i == 0) return;
+    [history[i], history[i-1]] = [history[i-1], history[i]];
+    updateHistory();
+  }
+
+  function historyRemove(i) {
+    history.splice(i, 1);
+    updateHistory();
+  }
+
   function updateHistory() {
     // 履歴をクリア  
     const historyElm = document.getElementById("history");
     historyElm.innerHTML = "";
     // 履歴を作成
     for (i = 0; i < history.length; i++) {
-      const h = history[history.length - i - 1];
+      const p = history.length - i - 1;
+      const h = history[p];
       const div = document.createElement("div");
       div.textContent = h;
       div.classList.add(h);
+      const btElm = document.createElement("span");
+      btElm.classList.add("bt-wrap");
+      btElm.innerHTML = "<button class='history-bt' onclick='historyDown("+p+")'>↓</button><button class='history-bt' onclick='historyRemove("+p+")'>✗</button>";
+      div.appendChild(btElm);
       historyElm.appendChild(div);
     }
   }
