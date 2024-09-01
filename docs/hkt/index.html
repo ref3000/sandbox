@@ -161,15 +161,39 @@
 <script>
   const S = 5; // 設定
   const M = 4; // モード
-  const array = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
+  let array = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
   const history = [];
-  const sr = Array.from({ length: S }, () => BigNumber(1));
+  let sr = Array.from({ length: S }, () => BigNumber(1));
 
   function calcHistory() {
-    console.log(history);
+    const modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
+    const results = Array.from({ length: S }, () => BigNumber(1));
+    for (let i = 0; i < history.length; i++) {
+      console.log(history[i]);
+      const h = history[i];
+      if (h == "reset") doReset(modeTable);
+      if (h == "resetAT") doResetAT(modeTable);
+      if (h == "replay") doApply(h, modeTable);
+      if (h == "suica") doApply(h, modeTable);
+      if (h == "cherry") doApply(h, modeTable);
+      if (h == "chance") doApply(h, modeTable);
+      if (h == "suicaF") doApply(h, modeTable);
+      if (h == "cherryF") doApply(h, modeTable);
+      if (h == "地獄↓") doCheck([1, 0, 0, 0], modeTable, results);
+      if (h == "通常↓") doCheck([1, 1, 0, 0], modeTable, results);
+      if (h == "天国↓") doCheck([1, 1, 1, 0], modeTable, results);
+      if (h == "通常↑") doCheck([0, 1, 1, 1], modeTable, results);
+      if (h == "天国↑") doCheck([0, 0, 1, 1], modeTable, results);
+      if (h == "本前兆") doCheck([0, 0, 0, 1], modeTable, results);
+    }
+    array = modeTable;
+    sr = results;
+    updateTable();
+    updateHistory();
+    updateSR();
   }
 
-  function onReset() {
+  function doReset(modeTable) {
     const p = [
       [48.7, 33.1, 17.6, 0.6],
       [47.6, 33.5, 18.3, 0.6],
@@ -179,17 +203,21 @@
     ];
     for (let s = 0; s < S; s++) {
       for (let m = 0; m < M; m++) {
-        array[s][m] = BigNumber(p[s][m]);
+        modeTable[s][m] = BigNumber(p[s][m]);
       }
     }
-    // history.splice(0);
-    history.push('reset');
-    updateTable();
-    updateHistory();
-    updateSR();
   }
 
-  function onResetAT() {
+  function onReset() {
+    // doReset(array);
+    history.push('reset');
+    calcHistory();
+    // updateTable();
+    // updateHistory();
+    // updateSR();
+  }
+
+  function doResetAT(modeTable) {
     const p = [
       [42.2, 31.3, 25.8, 0.7],
       [42.0, 31.5, 25.8, 0.7],
@@ -199,18 +227,21 @@
     ];
     for (let s = 0; s < S; s++) {
       for (let m = 0; m < M; m++) {
-        array[s][m] = BigNumber(p[s][m]);
+        modeTable[s][m] = BigNumber(p[s][m]);
       }
     }
-    // history.splice(0);
-    history.push('resetAT');
-    updateTable();
-    updateHistory();
-    updateSR();
   }
 
-  function apply(t) {
-    history.push(t);
+  function onResetAT() {
+    // doResetAT(array);
+    history.push('resetAT');
+    calcHistory();
+    // updateTable();
+    // updateHistory();
+    // updateSR();
+  }
+
+  function doApply(t, modeTable) {
     // 設定1の確率遷移 [before_mode, after_mode]
     // 0 -> 地獄, 1 -> 通常 ... 3 -> 本前兆
     // p[before, after] = 遷移確率
@@ -408,44 +439,55 @@
     ];
     for (let s = 0; s < S; s++) {
       const p = ppp[s][t];
-      const before = array[s];
+      const before = modeTable[s];
       const after = Array.from({ length: M }, () => BigNumber(0));
       for (let mb = 0; mb < M; mb++) {
         for (let ma = 0; ma < M; ma++) {
           after[ma] = after[ma].plus(before[mb].times(p[mb][ma]));
         }
       }
-      array[s] = after;
+      modeTable[s] = after;
     }
-    updateTable();
-    updateHistory();
   }
 
-  function check(t, p) {
+  function apply(t) {
     history.push(t);
+    calcHistory();
+    // doApply(t, array);
+    // updateTable();
+    // updateHistory();
+  }
+
+  function doCheck(p, modeTable, results) {
     const r = Array.from({ length: S }, () => BigNumber(0));
     const ms = Array.from({ length: S }, () => BigNumber(0));
     for (let s = 0; s < S; s++) {
       let sum = 0;
       for (let m = 0; m < M; m++) {
-        ms[s] = ms[s].plus(array[s][m]);
+        ms[s] = ms[s].plus(modeTable[s][m]);
         if (!p[m]) {
-          array[s][m] = BigNumber(0);
+          modeTable[s][m] = BigNumber(0);
         } else {
-          r[s] = r[s].plus(array[s][m]);
+          r[s] = r[s].plus(modeTable[s][m]);
         }
-        sum += array[s][m].toNumber();
+        sum += modeTable[s][m].toNumber();
       }
       if (!sum) {
         for (let m = 0; m < M; m++) {
-          if (p[m]) array[s][m] = BigNumber(1);
+          if (p[m]) modeTable[s][m] = BigNumber(1);
         }
       }
-      if (r[s].toNumber()) sr[s] = sr[s].times(r[s].dividedBy(ms[s]))
+      if (r[s].toNumber()) results[s] = results[s].times(r[s].dividedBy(ms[s]))
     }
-    updateTable();
-    updateHistory();
-    updateSR();
+  }
+
+  function check(t, p) {
+    history.push(t);
+    calcHistory();
+    // doCheck(p, array, sr);
+    // updateTable();
+    // updateHistory();
+    // updateSR();
   }
 
   // テーブルの更新
@@ -501,12 +543,14 @@
   function historyDown(i) {
     if (i == 0) return;
     [history[i], history[i-1]] = [history[i-1], history[i]];
-    updateHistory();
+    // updateHistory();
+    calcHistory();
   }
 
   function historyRemove(i) {
     history.splice(i, 1);
-    updateHistory();
+    // updateHistory();
+    calcHistory();
   }
 
   function updateHistory() {
