@@ -8,12 +8,43 @@
     margin: 0;
     padding: 0;
   }
+  header{
+    background: rgb(255, 197, 197);
+    position: fixed;
+    width: 320px;
+    height: 30px;
+  }
+  span {
+    display: inline-block;
+    text-align: center;
+  }
+  .rt {
+    width: 13px;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  .result {
+    width: 34px;
+    margin-top: 5px;
+    margin-right: 11px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .header-back {
+    height: 30px;
+  }
   button {
     width: 50px;
     height: 50px;
     font-size: 12px;
     text-align: center;
     overflow-wrap: anywhere;
+  }
+  .padding-top {
+    height: 24px;
+  }
+  .b-container-top {
+    margin-top: 8px;
   }
   .b-container {
     display: flex;
@@ -86,7 +117,15 @@
 </style>
 </head>
 <body>
-<div>
+<header>
+  <span class="rt">1:</span><span id="r0" class="result"></span>
+  <span class="rt">2:</span><span id="r1" class="result"></span>
+  <span class="rt">4:</span><span id="r2" class="result"></span>
+  <span class="rt">5:</span><span id="r3" class="result"></span>
+  <span class="rt">6:</span><span id="r4" class="result"></span>
+</header>
+<div class="padding-top"></div>
+<div class="b-container-top">
   <button onclick="onReset()" class="b-c1">Reset</button>
   <button onclick="onResetAT()" class="b-c1">AT終了</button>
 </div>
@@ -116,6 +155,7 @@
   const M = 4; // モード
   const array = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
   const history = [];
+  const sr = Array.from({ length: S }, () => BigNumber(1));
 
   function onReset() {
     const p = [
@@ -133,6 +173,7 @@
     history.splice(0);
     updateTable();
     updateHistory();
+    updateSR();
   }
 
   function onResetAT() {
@@ -151,6 +192,7 @@
     history.splice(0);
     updateTable();
     updateHistory();
+    updateSR();
   }
 
   function apply(t) {
@@ -367,10 +409,17 @@
 
   function check(t, p) {
     history.push(t);
+    const r = Array.from({ length: S }, () => BigNumber(0));
+    const ms = Array.from({ length: S }, () => BigNumber(0));
     for (let s = 0; s < S; s++) {
       let sum = 0;
       for (let m = 0; m < M; m++) {
-        if (!p[m]) array[s][m] = BigNumber(0);
+        ms[s] = ms[s].plus(array[s][m]);
+        if (!p[m]) {
+          array[s][m] = BigNumber(0);
+        } else {
+          r[s] = r[s].plus(array[s][m]);
+        }
         sum += array[s][m].toNumber();
       }
       if (!sum) {
@@ -378,9 +427,11 @@
           if (p[m]) array[s][m] = BigNumber(1);
         }
       }
+      if (r[s].toNumber()) sr[s] = sr[s].times(r[s].dividedBy(ms[s]))
     }
     updateTable();
     updateHistory();
+    updateSR();
   }
 
   // テーブルの更新
@@ -444,6 +495,18 @@
       div.textContent = h;
       div.classList.add(h);
       historyElm.appendChild(div);
+    }
+  }
+
+  function updateSR() {
+    let sum = BigNumber(0);
+    for (let s = 0; s < S; s++) {
+      sum = sum.plus(sr[s]);
+    }
+    for (let s = 0; s < S; s++) {
+      const elm = document.getElementById("r"+s);
+      const p = sr[s].dividedBy(sum).times(100).toFixed(2);
+      elm.textContent = p + "%";
     }
   }
 
