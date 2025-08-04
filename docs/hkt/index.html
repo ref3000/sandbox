@@ -153,6 +153,14 @@
   <button onclick="check('天国↑', [0, 0, 1, 1])" class="b-c2">天国↑</button>
   <button onclick="check('本前兆', [0, 0, 0, 1])" class="b-c3">本前兆</button>
 </div>
+<div class="b-container">
+  <button onclick="voice('voice1')" class="b-blue">その他</button>
+  <button onclick="voice('voice2')" class="b-green">シン</button>
+  <button onclick="voice('voice3')" class="b-green">サウザ</button>
+  <button onclick="voice('voice4')" class="b-yellow">ジャギ</button>
+  <button onclick="voice('voice5')" class="b-red">アミバ</button>
+  <div style="width: 50px;"></div>
+</div>
 <div class="table-container">
   <table id="table"></table>
 </div>
@@ -179,6 +187,11 @@
       if (h == "chance") doApply(h, modeTable);
       if (h == "suicaF") doApply(h, modeTable);
       if (h == "cherryF") doApply(h, modeTable);
+      if (h == "voice1") doVoice(h, results);
+      if (h == "voice2") doVoice(h, results);
+      if (h == "voice3") doVoice(h, results);
+      if (h == "voice4") doVoice(h, results);
+      if (h == "voice5") doVoice(h, results);
       if (h == "地獄↓") doCheck([1, 0, 0, 0], modeTable, results);
       if (h == "通常↓") doCheck([1, 1, 0, 0], modeTable, results);
       if (h == "天国↓") doCheck([1, 1, 1, 0], modeTable, results);
@@ -458,6 +471,21 @@
     // updateHistory();
   }
 
+  function doVoice(t, results) {
+    // ボイス発生確率テーブル [設定1, 設定2, 設定4, 設定5, 設定6]
+    const voiceProbabilities = {
+      "voice1": [84.73, 83.21, 74.96, 73.16, 71.32], // その他（100%から4種類の合計を引いた値）
+      "voice2": [5.65, 6.10, 6.26, 6.71, 7.17], // シン
+      "voice3": [5.04, 5.34, 6.26, 6.71, 7.17], // サウザー
+      "voice4": [3.36, 3.81, 6.26, 6.71, 7.17], // ジャギ
+      "voice5": [1.22, 1.53, 6.26, 6.71, 7.17], // アミバ
+    };
+    const probs = voiceProbabilities[t];
+    for (let s = 0; s < S; s++) {
+      results[s] = results[s].times(probs[s]);
+    }
+  }
+
   function doCheck(p, modeTable, results) {
     const r = Array.from({ length: S }, () => BigNumber(0));
     const ms = Array.from({ length: S }, () => BigNumber(0));
@@ -479,6 +507,11 @@
       }
       if (r[s].toNumber()) results[s] = results[s].times(r[s].dividedBy(ms[s]))
     }
+  }
+
+  function voice(t) {
+    history.push(t);
+    calcHistory();
   }
 
   function check(t, p) {
