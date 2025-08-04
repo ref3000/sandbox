@@ -161,6 +161,14 @@
   <button onclick="voice('voice5')" class="b-red">アミバ</button>
   <div style="width: 50px;"></div>
 </div>
+<div class="b-container">
+  <button onclick="bell('bell1')" class="b-c1">ベル1</button>
+  <button onclick="bell('bell2')" class="b-yellow">ベル2</button>
+  <div style="width: 50px;"></div>
+  <div style="width: 50px;"></div>
+  <div style="width: 50px;"></div>
+  <div style="width: 50px;"></div>
+</div>
 <div class="table-container">
   <table id="table"></table>
 </div>
@@ -192,6 +200,8 @@
       if (h == "voice3") doVoice(h, results);
       if (h == "voice4") doVoice(h, results);
       if (h == "voice5") doVoice(h, results);
+      if (h == "bell1") doBell(h, results);
+      if (h == "bell2") doBell(h, results);
       if (h == "地獄↓") doCheck([1, 0, 0, 0], modeTable, results);
       if (h == "通常↓") doCheck([1, 1, 0, 0], modeTable, results);
       if (h == "天国↓") doCheck([1, 1, 1, 0], modeTable, results);
@@ -486,6 +496,19 @@
     }
   }
 
+  function doBell(t, results) {
+    // ベル発生確率テーブル [設定1, 設定2, 設定4, 設定5, 設定6]
+    const bellProbabilities = {
+      "bell1": [89.8, 89.8, 88.7, 87.6, 86.35], // ベル1
+      "bell2": [10.2, 10.2, 11.3, 12.4, 13.65], // ベル2（100%からベル1を引いた値）
+    };
+    
+    const probs = bellProbabilities[t];
+    for (let s = 0; s < S; s++) {
+      results[s] = results[s].times(probs[s]);
+    }
+  }
+
   function doCheck(p, modeTable, results) {
     const r = Array.from({ length: S }, () => BigNumber(0));
     const ms = Array.from({ length: S }, () => BigNumber(0));
@@ -510,6 +533,11 @@
   }
 
   function voice(t) {
+    history.push(t);
+    calcHistory();
+  }
+
+  function bell(t) {
     history.push(t);
     calcHistory();
   }
