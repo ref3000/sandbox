@@ -133,9 +133,13 @@
   <span class="rt">6:</span><span id="r4" class="result"></span>
 </header>
 <div class="padding-top"></div>
-<div class="b-container-top">
+<div class="b-container">
   <button onclick="onReset()" class="b-c1">Reset</button>
   <button onclick="onResetAT()" class="b-c1">AT終了</button>
+  <div style="width: 50px;"></div>
+  <div style="width: 50px;"></div>
+  <div style="width: 50px;"></div>
+  <button onclick="onClearHistory()" class="b-red">履歴<br>全消去</button>
 </div>
 <div class="b-container">
   <button onclick="apply('replay')" class="b-blue">リプ</button>
@@ -162,8 +166,8 @@
   <div style="width: 50px;"></div>
 </div>
 <div class="b-container">
-  <button onclick="bell('bell1')" class="b-c1">ベル1</button>
-  <button onclick="bell('bell2')" class="b-yellow">ベル2</button>
+  <button onclick="bell('bell1')" class="b-c1">通常<br>ベル1</button>
+  <button onclick="bell('bell2')" class="b-yellow">通常<br>ベル2</button>
   <div style="width: 50px;"></div>
   <div style="width: 50px;"></div>
   <div style="width: 50px;"></div>
@@ -185,7 +189,6 @@
     const modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
     const results = Array.from({ length: S }, () => BigNumber(1));
     for (let i = 0; i < history.length; i++) {
-      console.log(history[i]);
       const h = history[i];
       if (h == "reset") doReset(modeTable);
       if (h == "resetAT") doResetAT(modeTable);
@@ -214,6 +217,7 @@
     updateTable();
     updateHistory();
     updateSR();
+    updateURL(); // URLを更新
   }
 
   function doReset(modeTable) {
@@ -262,6 +266,11 @@
     // updateTable();
     // updateHistory();
     // updateSR();
+  }
+
+  function onClearHistory() {
+    history.length = 0;
+    calcHistory();
   }
 
   function doApply(t, modeTable) {
@@ -604,14 +613,14 @@
   function historyDown(i) {
     if (i == 0) return;
     [history[i], history[i-1]] = [history[i-1], history[i]];
-    // updateHistory();
     calcHistory();
+    updateHistoryAndURL();
   }
 
   function historyRemove(i) {
     history.splice(i, 1);
-    // updateHistory();
     calcHistory();
+    updateHistoryAndURL();
   }
 
   function updateHistory() {
@@ -645,8 +654,44 @@
     }
   }
 
+  // 履歴と短縮文字のマッピング
+  const historyMap = {
+    "reset": "r", "resetAT": "a", "replay": "p", "cherry": "c", "suica": "s",
+    "chance": "h", "suicaF": "f", "cherryF": "g", "voice1": "1", "voice2": "2",
+    "voice3": "3", "voice4": "4", "voice5": "5", "bell1": "b", "bell2": "l",
+    "地獄↓": "d", "通常↓": "n", "天国↓": "t", "通常↑": "u", "天国↑": "v", "本前兆": "w"
+  };
+
+  // 短縮文字から履歴への逆マッピング
+  const shortMap = Object.fromEntries(Object.entries(historyMap).map(([k, v]) => [v, k]));
+
+  function updateURL() {
+    window.location.hash = history.map(h => historyMap[h]).join('');
+  }
+
+  function loadHistoryFromURL() {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      history.length = 0;
+      history.push(...hash.split('').map(c => shortMap[c]));
+      calcHistory();
+      updateHistory();
+      return true;
+    }
+    return false;
+  }
+
+  // 履歴変更時にURLを更新する関数
+  function updateHistoryAndURL() {
+    updateHistory();
+    updateURL();
+  }
+
   document.addEventListener("DOMContentLoaded", function() {
-    onReset();
+    // URLから履歴を読み込む（成功した場合はonResetを呼ばない）
+    if (!loadHistoryFromURL()) {
+      onReset(); // URLに履歴がない場合のみ初期化
+    }
   });
 </script>
 </body>
