@@ -80,6 +80,11 @@
   };
   const shortMap = Object.fromEntries(Object.entries(historyMap).map(([k, v]) => [v, k]));
 
+  const displayMap = {
+    "reset": "設定変更", "at_end": "AT終了", "densho": "伝承終了",
+    "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞", "strong": "強チェ", "fall": "ハズレ等"
+  };
+
   function calcHistory() {
     modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
     sr = Array.from({ length: S }, () => BigNumber(1));
@@ -241,7 +246,8 @@
     let hHtml = "";
     for (let i = history.length - 1; i >= 0; i--) {
       const item = history[i];
-      const label = item.c > 1 ? `${item.t} x ${item.c}` : item.t;
+      const dLabel = displayMap[item.t] || item.t;
+      const label = item.c > 1 ? `${dLabel} x ${item.c}` : dLabel;
       hHtml += `<div class="history-item">
         <span class="history-label">${label}</span>
         <span>
