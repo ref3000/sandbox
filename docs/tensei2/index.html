@@ -174,14 +174,26 @@
 
   function doCheck(pMask) {
     for (let s = 0; s < S; s++) {
-      let sum = BigNumber(0);
-      let match = BigNumber(0);
+      let beforeSum = BigNumber(0);
+      let matchSum = BigNumber(0);
+      
+      // 現在の全状態の合計（分母）と、条件に一致する状態の合計（分子）を計算
       for (let m = 0; m < M; m++) {
-        sum = sum.plus(modeTable[s][m]);
-        if (pMask[m]) match = match.plus(modeTable[s][m]);
+        beforeSum = beforeSum.plus(modeTable[s][m]);
+        if (pMask[m]) {
+          matchSum = matchSum.plus(modeTable[s][m]);
+        }
       }
-      if (sum.gt(0)) {
-        sr[s] = sr[s].times(match.dividedBy(sum));
+
+      // 矛盾が発生した場合（一致する状態の確率が0）
+      if (matchSum.isZero()) {
+        // 設定確率は更新せず維持し、内部状態を条件に沿ってリセット（均等割り）
+        for (let m = 0; m < M; m++) {
+          modeTable[s][m] = pMask[m] ? BigNumber(1) : BigNumber(0);
+        }
+      } else {
+        // 矛盾がない場合、設定確率を更新し、内部状態を条件で絞り込む
+        sr[s] = sr[s].times(matchSum.dividedBy(beforeSum));
         for (let m = 0; m < M; m++) {
           if (!pMask[m]) modeTable[s][m] = BigNumber(0);
         }
