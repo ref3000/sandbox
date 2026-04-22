@@ -70,12 +70,12 @@
   const M = 4; // 状態: 0:低確, 1:通常, 2:高確, 3:当選
   let modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
   let sr = Array.from({ length: S }, () => BigNumber(1));
-  let history = [];
+  let history = []; // [{t: 'type', c: count}, ...]
 
   const historyMap = {
     "reset": "R", "at_end": "A", "densho": "D",
     "weak": "w", "suika": "s", "chan": "c", "strong": "g", "fall": "f",
-    "低確↓": "1", "通常↓": "2", "通常↑": "3", "高確↑": "4", "当選": "5"
+    "低確↓": "L", "通常↓": "N", "通常↑": "U", "高確↑": "H", "当選": "V"
   };
   const shortMap = Object.fromEntries(Object.entries(historyMap).map(([k, v]) => [v, k]));
 
@@ -83,26 +83,29 @@
     modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
     sr = Array.from({ length: S }, () => BigNumber(1));
     
-    history.forEach(h => {
-      if (h === 'reset') {
-        const p = [25, 25, 50, 0];
-        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
-      }
-      else if (h === 'at_end') {
-        const p = [0, 40.6, 59.4, 0];
-        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
-      }
-      else if (h === 'densho') {
-        const d = [
-          [71.9, 25.0, 3.1, 0], [71.1, 25.4, 3.5, 0], [70.3, 25.8, 3.9, 0],
-          [50.0, 42.2, 7.8, 0], [43.8, 46.9, 9.4, 0], [39.1, 50.0, 10.9, 0]
-        ];
-        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(d[s][m]);
-      }
-      else if (['weak','suika','chan','strong','fall'].includes(h)) doApply(h);
-      else if (shortMap[historyMap[h]]) {
-        const pMap = { "低確↓":[1,0,0,0], "通常↓":[1,1,0,0], "通常↑":[0,1,1,1], "高確↑":[0,0,1,1], "当選":[0,0,0,1] };
-        doCheck(pMap[h]);
+    history.forEach(item => {
+      const h = item.t;
+      for (let i = 0; i < item.c; i++) {
+        if (h === 'reset') {
+          const p = [25, 25, 50, 0];
+          for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
+        }
+        else if (h === 'at_end') {
+          const p = [0, 40.6, 59.4, 0];
+          for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
+        }
+        else if (h === 'densho') {
+          const d = [
+            [71.9, 25.0, 3.1, 0], [71.1, 25.4, 3.5, 0], [70.3, 25.8, 3.9, 0],
+            [50.0, 42.2, 7.8, 0], [43.8, 46.9, 9.4, 0], [39.1, 50.0, 10.9, 0]
+          ];
+          for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(d[s][m]);
+        }
+        else if (['weak','suika','chan','strong','fall'].includes(h)) doApply(h);
+        else if (shortMap[historyMap[h]]) {
+          const pMap = { "低確↓":[1,0,0,0], "通常↓":[1,1,0,0], "通常↑":[0,1,1,1], "高確↑":[0,0,1,1], "当選":[0,0,0,1] };
+          doCheck(pMap[h]);
+        }
       }
     });
     updateUI();
@@ -186,11 +189,26 @@
     }
   }
 
-  function apply(t) { history.push(t); calcHistory(); }
-  function check(t, p) { history.push(t); calcHistory(); }
-  function onReset(t) { history.push(t); calcHistory(); }
+  function pushHistory(t) {
+    if (history.length > 0 && history[history.length - 1].t === t) {
+      history[history.length - 1].c++;
+    } else {
+      history.push({ t: t, c: 1 });
+    }
+    calcHistory();
+  }
+
+  function apply(t) { pushHistory(t); }
+  function check(t, p) { pushHistory(t); }
+  function onReset(t) { pushHistory(t); }
   function onClearHistory() { history = []; calcHistory(); }
   function historyRemove(i) { history.splice(i, 1); calcHistory(); }
+  
+  function historyDown(i) {
+    if (i <= 0) return;
+    [history[i], history[i-1]] = [history[i-1], history[i]];
+    calcHistory();
+  }
 
   function updateUI() {
     let totalSr = sr.reduce((a, b) => a.plus(b), BigNumber(0));
@@ -216,16 +234,39 @@
 
     let hHtml = "";
     for (let i = history.length - 1; i >= 0; i--) {
-      hHtml += `<div class="history-item"><span class="history-label">${history[i]}</span><button class="history-bt" onclick="historyRemove(${i})">✕</button></div>`;
+      const item = history[i];
+      const label = item.c > 1 ? `${item.t} x ${item.c}` : item.t;
+      hHtml += `<div class="history-item">
+        <span class="history-label">${label}</span>
+        <span>
+          <button class="history-bt" onclick="historyDown(${i})">↓</button>
+          <button class="history-bt" onclick="historyRemove(${i})">✕</button>
+        </span>
+      </div>`;
     }
     document.getElementById("history").innerHTML = hHtml;
-    window.location.hash = history.map(h => historyMap[h]).join('');
+
+    // URLを圧縮形式で更新 (例: f10w2)
+    window.location.hash = history.map(h => {
+      const char = historyMap[h.t];
+      return h.c > 1 ? char + h.c : char;
+    }).join('');
   }
 
   window.onload = () => {
     const hash = window.location.hash.substring(1);
     if (hash) {
-      history = hash.split('').map(c => shortMap[c]).filter(v => v);
+      history = [];
+      const regex = /([a-zA-Z])(\d*)/g;
+      let match;
+      while ((match = regex.exec(hash)) !== null) {
+        const char = match[1];
+        const count = match[2] ? parseInt(match[2], 10) : 1;
+        const t = shortMap[char];
+        if (t) {
+          history.push({ t: t, c: count });
+        }
+      }
       calcHistory();
     } else {
       onReset('reset');
