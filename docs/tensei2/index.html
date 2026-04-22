@@ -22,8 +22,8 @@
   th { background-color: #f2f2f2; }
   #history { margin-top: 10px; padding: 4px; font-size: 12px; }
   .history-item { border-bottom: 1px solid #eee; padding: 4px; display: flex; justify-content: space-between; align-items: center; }
-  .history-bt { width: 24px; height: 24px; font-size: 10px; margin-left: 2px; }
-  .history-label { flex-grow: 1; }
+  .history-bt { width: 24px; height: 24px; font-size: 10px; margin-left: 2px; border: 1px solid #999; border-radius: 2px; background: #fff; cursor: pointer; }
+  .history-label { flex-grow: 1; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -49,7 +49,7 @@
   <button onclick="apply('weak')" class="b-red">弱チェ</button>
   <button onclick="apply('suika')" class="b-green">スイカ</button>
   <button onclick="apply('chan')" class="b-yellow">チャンス<br>勝舞揃い</button>
-  <button onclick="apply('strong')" class="b-red" style="font-weight:bold">強チェ</button>
+  <button onclick="apply('strong')" class="b-red">強チェ</button>
   <button onclick="apply('fall')" class="b-blue">ハズレ等<br>(転落)</button>
 </div>
 
@@ -59,7 +59,7 @@
   <button onclick="check('高確↓', [1, 1, 1, 0])" class="b-gray">高確↓</button>
   <button onclick="check('通常↑', [0, 1, 1, 1])" class="b-gray">通常↑</button>
   <button onclick="check('高確↑', [0, 0, 1, 1])" class="b-gray">高確↑</button>
-  <button onclick="check('当選',   [0, 0, 0, 1])" class="b-yellow" style="font-weight:bold">当選</button>
+  <button onclick="check('当選',   [0, 0, 0, 1])" class="b-yellow">当選</button>
 </div>
 
 <table id="table"></table>
@@ -83,6 +83,12 @@
   const displayMap = {
     "reset": "設定変更", "at_end": "AT終了", "densho": "伝承終了",
     "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞", "strong": "強チェ", "fall": "ハズレ等"
+  };
+
+  const colorMap = {
+    "reset": "b-dark", "at_end": "b-dark", "densho": "b-dark",
+    "weak": "b-red", "suika": "b-green", "chan": "b-yellow", "strong": "b-red", "fall": "b-blue",
+    "低確↓": "b-gray", "通常↓": "b-gray", "高確↓": "b-gray", "通常↑": "b-gray", "高確↑": "b-gray", "当選": "b-yellow"
   };
 
   function calcHistory() {
@@ -248,7 +254,8 @@
       const item = history[i];
       const dLabel = displayMap[item.t] || item.t;
       const label = item.c > 1 ? `${dLabel} x ${item.c}` : dLabel;
-      hHtml += `<div class="history-item">
+      const colorClass = colorMap[item.t] || "b-gray";
+      hHtml += `<div class="history-item ${colorClass}">
         <span class="history-label">${label}</span>
         <span>
           <button class="history-bt" onclick="historyDown(${i})">↓</button>
