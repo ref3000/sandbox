@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>転生2設定判別</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<style>
+  html, body { margin: 0; padding: 0; font-family: sans-serif; background: #fdfdfd; }
+  header { background: #d0eaff; position: fixed; width: 320px; height: 35px; display: flex; align-items: center; z-index: 100; border-bottom: 1px solid #ccc; }
+  .rt { font-size: 10px; margin-left: 4px; color: #666; }
+  .result { width: 34px; font-size: 10px; font-weight: bold; text-align: right; margin-right: 4px; }
+  .padding-top { height: 40px; }
+  .b-container { display: flex; justify-content: space-around; margin-top: 8px; padding: 0 4px; }
+  button { width: 50px; height: 50px; font-size: 9px; text-align: center; border: 1px solid #999; border-radius: 4px; background: #fff; cursor: pointer; }
+  .b-blue { background-color: #a0d8ef; }
+  .b-green { background-color: #83b85d; }
+  .b-red { background-color: #f69ea1; }
+  .b-yellow { background-color: #dcd15f; }
+  .b-gray { background-color: #eeeeee; }
+  .b-dark { background-color: #cccccc; }
+  table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 11px; }
+  th, td { border: 1px solid #ddd; padding: 8px 0; text-align: center; }
+  th { background-color: #f2f2f2; }
+  #history { margin-top: 10px; padding: 4px; font-size: 12px; }
+  .history-item { border-bottom: 1px solid #eee; padding: 4px; display: flex; justify-content: space-between; align-items: center; }
+  .history-bt { width: 24px; height: 24px; font-size: 10px; margin-left: 2px; }
+  .history-label { flex-grow: 1; }
+</style>
+</head>
+<body>
+<header>
+  <span class="rt">1:</span><span id="r0" class="result"></span>
+  <span class="rt">2:</span><span id="r1" class="result"></span>
+  <span class="rt">3:</span><span id="r2" class="result"></span>
+  <span class="rt">4:</span><span id="r3" class="result"></span>
+  <span class="rt">5:</span><span id="r4" class="result"></span>
+  <span class="rt">6:</span><span id="r5" class="result"></span>
+</header>
+<div class="padding-top"></div>
+
+<div class="b-container">
+  <button onclick="onReset('reset')" class="b-dark">設定変更</button>
+  <button onclick="onReset('at_end')" class="b-dark">AT終了</button>
+  <button onclick="onReset('densho')" class="b-dark">伝承終了</button>
+  <div style="width: 50px;"></div>
+  <button onclick="onClearHistory()" class="b-red">履歴<br>全消去</button>
+</div>
+
+<div class="b-container">
+  <button onclick="apply('weak')" class="b-red">弱チェ</button>
+  <button onclick="apply('suika')" class="b-green">スイカ</button>
+  <button onclick="apply('chan')" class="b-yellow">チャンス<br>勝舞揃い</button>
+  <button onclick="apply('strong')" class="b-red" style="font-weight:bold">強チェ</button>
+  <button onclick="apply('fall')" class="b-blue">ハズレ等<br>(転落)</button>
+</div>
+
+<div class="b-container">
+  <button onclick="check('低確↓', [1, 0, 0, 0])" class="b-gray">低確↓</button>
+  <button onclick="check('通常↓', [1, 1, 0, 0])" class="b-gray">通常↓</button>
+  <button onclick="check('通常↑', [0, 1, 1, 1])" class="b-gray">通常↑</button>
+  <button onclick="check('高確↑', [0, 0, 1, 1])" class="b-gray">高確↑</button>
+  <button onclick="check('当選',   [0, 0, 0, 1])" class="b-yellow" style="font-weight:bold">当選</button>
+</div>
+
+<table id="table"></table>
+<div id="history"></div>
+
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
+<script>
+  const S = 6; // 設定 1-6
+  const M = 4; // 状態: 0:低確, 1:通常, 2:高確, 3:当選
+  let modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
+  let sr = Array.from({ length: S }, () => BigNumber(1));
+  let history = [];
+
+  const historyMap = {
+    "reset": "R", "at_end": "A", "densho": "D",
+    "weak": "w", "suika": "s", "chan": "c", "strong": "g", "fall": "f",
+    "低確↓": "1", "通常↓": "2", "通常↑": "3", "高確↑": "4", "当選": "5"
+  };
+  const shortMap = Object.fromEntries(Object.entries(historyMap).map(([k, v]) => [v, k]));
+
+  function calcHistory() {
+    modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
+    sr = Array.from({ length: S }, () => BigNumber(1));
+    
+    history.forEach(h => {
+      if (h === 'reset') {
+        const p = [25, 25, 50, 0];
+        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
+      }
+      else if (h === 'at_end') {
+        const p = [0, 40.6, 59.4, 0];
+        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(p[m]);
+      }
+      else if (h === 'densho') {
+        const d = [
+          [71.9, 25.0, 3.1, 0], [71.1, 25.4, 3.5, 0], [70.3, 25.8, 3.9, 0],
+          [50.0, 42.2, 7.8, 0], [43.8, 46.9, 9.4, 0], [39.1, 50.0, 10.9, 0]
+        ];
+        for(let s=0; s<S; s++) for(let m=0; m<M; m++) modeTable[s][m] = BigNumber(d[s][m]);
+      }
+      else if (['weak','suika','chan','strong','fall'].includes(h)) doApply(h);
+      else if (shortMap[historyMap[h]]) {
+        const pMap = { "低確↓":[1,0,0,0], "通常↓":[1,1,0,0], "通常↑":[0,1,1,1], "高確↑":[0,0,1,1], "当選":[0,0,0,1] };
+        doCheck(pMap[h]);
+      }
+    });
+    updateUI();
+  }
+
+  function doApply(role) {
+    const winRates = {
+      weak:   { L: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], N: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], H: 31.3 },
+      suika:  { L: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], N: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], H: 31.3 },
+      chan:   { L: [2.0, 2.7, 3.1, 3.9, 4.7, 6.3], N: [10.2, 10.5, 10.9, 12.5, 15.6, 18.8], H: 66.4 },
+      strong: { L: 25.0, N: 25.0, H: 100 },
+      fall:   { L: 0, N: 0, H: 0 }
+    };
+
+    const lowTrans = {
+      weak: [ [53.1,46.1,0.8], [53.1,46.1,0.8], [52.0,46.9,1.2], [48.4,50.0,1.6], [37.5,59.4,3.1], [32.8,62.5,4.7] ],
+      suika: [ [32.8,65.6,1.6], [32.8,65.6,1.6], [32.4,65.6,2.0], [26.6,70.3,3.1], [17.2,76.6,6.3], [10.9,81.3,7.8] ],
+      chan: [ [28.1,50.0,21.9], [27.7,50.0,22.3], [27.3,50.0,22.7], [25.0,50.0,25.0], [18.8,50.0,31.3], [12.5,50.0,37.5] ],
+      strong: Array(6).fill([0, 75.0, 25.0])
+    };
+
+    const normToHigh = { weak: 46.9, suika: 66.4, chan: 71.9, strong: 100 };
+
+    for (let s = 0; s < S; s++) {
+      const next = Array(M).fill(BigNumber(0));
+      const cur = modeTable[s];
+      const wr = winRates[role];
+
+      for (let m = 0; m < 3; m++) {
+        if (cur[m].isZero()) continue;
+        let pWinVal = (m===0 ? (Array.isArray(wr.L)?wr.L[s]:wr.L) : (m===1 ? (Array.isArray(wr.N)?wr.N[s]:wr.N) : wr.H));
+        let pWin = BigNumber(pWinVal / 100);
+        let pStay = BigNumber(1).minus(pWin);
+        
+        next[3] = next[3].plus(cur[m].times(pWin));
+
+        if (role === 'fall') {
+          if (m === 1) { 
+            next[0] = next[0].plus(cur[m].times(0.023));
+            next[1] = next[1].plus(cur[m].times(0.977));
+          } else if (m === 2) { 
+            next[1] = next[1].plus(cur[m].times(0.023));
+            next[2] = next[2].plus(cur[m].times(0.977));
+          } else {
+            next[m] = next[m].plus(cur[m]);
+          }
+        } else {
+          if (m === 0) { 
+            const tr = lowTrans[role][s];
+            next[0] = next[0].plus(cur[0].times(pStay).times(tr[0]/100));
+            next[1] = next[1].plus(cur[0].times(pStay).times(tr[1]/100));
+            next[2] = next[2].plus(cur[0].times(pStay).times(tr[2]/100));
+          } else if (m === 1) { 
+            let pToH = BigNumber(normToHigh[role] / 100);
+            next[2] = next[2].plus(cur[1].times(pStay).times(pToH));
+            next[1] = next[1].plus(cur[1].times(pStay).times(BigNumber(1).minus(pToH)));
+          } else { 
+            next[2] = next[2].plus(cur[2].times(pStay));
+          }
+        }
+      }
+      next[3] = next[3].plus(cur[3]); 
+      modeTable[s] = next;
+    }
+  }
+
+  function doCheck(pMask) {
+    for (let s = 0; s < S; s++) {
+      let sum = BigNumber(0);
+      let match = BigNumber(0);
+      for (let m = 0; m < M; m++) {
+        sum = sum.plus(modeTable[s][m]);
+        if (pMask[m]) match = match.plus(modeTable[s][m]);
+      }
+      if (sum.gt(0)) {
+        sr[s] = sr[s].times(match.dividedBy(sum));
+        for (let m = 0; m < M; m++) {
+          if (!pMask[m]) modeTable[s][m] = BigNumber(0);
+        }
+      }
+    }
+  }
+
+  function apply(t) { history.push(t); calcHistory(); }
+  function check(t, p) { history.push(t); calcHistory(); }
+  function onReset(t) { history.push(t); calcHistory(); }
+  function onClearHistory() { history = []; calcHistory(); }
+  function historyRemove(i) { history.splice(i, 1); calcHistory(); }
+
+  function updateUI() {
+    let totalSr = sr.reduce((a, b) => a.plus(b), BigNumber(0));
+    for (let s = 0; s < S; s++) {
+      const p = totalSr.isZero() ? "0.00" : sr[s].dividedBy(totalSr).times(100).toFixed(2);
+      document.getElementById("r" + s).textContent = p + "%";
+    }
+
+    const labels = ["低確", "通常", "高確", "当選"];
+    let html = "<tr><th>状態</th>";
+    for(let s=1; s<=6; s++) html += `<th>設定${s}</th>`;
+    html += "</tr>";
+    for (let m = 0; m < M; m++) {
+      html += `<tr><td>${labels[m]}</td>`;
+      for (let s = 0; s < S; s++) {
+        let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
+        let p = (sum.isZero() || modeTable[s][m].isZero()) ? "0" : modeTable[s][m].dividedBy(sum).times(100).toFixed(1);
+        html += `<td>${p}%</td>`;
+      }
+      html += "</tr>";
+    }
+    document.getElementById("table").innerHTML = html;
+
+    let hHtml = "";
+    for (let i = history.length - 1; i >= 0; i--) {
+      hHtml += `<div class="history-item"><span class="history-label">${history[i]}</span><button class="history-bt" onclick="historyRemove(${i})">✕</button></div>`;
+    }
+    document.getElementById("history").innerHTML = hHtml;
+    window.location.hash = history.map(h => historyMap[h]).join('');
+  }
+
+  window.onload = () => {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      history = hash.split('').map(c => shortMap[c]).filter(v => v);
+      calcHistory();
+    } else {
+      onReset('reset');
+    }
+  };
+</script>
+</body>
+</html>
