@@ -68,7 +68,7 @@
 <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
 <script>
   const S = 6; 
-  const M = 7; // 0:低, 1:通, 2:高, 3:天破前兆, 4:伝承S, 5:伝承M, 6:伝承L
+  const M = 10; // 0:低, 1:通, 2:高, 3:通常前兆, 4:伝承S, 5:伝承M, 6:伝承L, 7:伝承S前兆, 8:伝承M前兆, 9:伝承L前兆
   let modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
   let sr = Array.from({ length: S }, () => BigNumber(1));
   let history = []; 
@@ -128,6 +128,12 @@
                 next[4] = next[4].plus(cur[3].times(0.984));
                 next[5] = next[5].plus(cur[3].times(0.012));
                 next[6] = next[6].plus(cur[3].times(0.004));
+              } else if (m === 7) {
+                next[4] = next[4].plus(cur[7]);
+              } else if (m === 8) {
+                next[5] = next[5].plus(cur[8]);
+              } else if (m === 9) {
+                next[6] = next[6].plus(cur[9]);
               } else {
                 next[m] = next[m].plus(cur[m]);
               }
@@ -137,7 +143,14 @@
         }
         else if (['weak','suika','chan','strong','fall'].includes(h)) doApply(h);
         else if (shortMap[historyMap[h]]) {
-          const pMap = { "低確↓":[1,0,0,0,0,0,0], "通常↓":[1,1,0,0,0,0,0], "高確↓":[1,1,1,0,0,0,0], "通常↑":[0,1,1,1,1,1,1], "伝承↑":[0,0,0,0,1,1,1], "天破前兆":[0,0,0,1,0,0,0] };
+          const pMap = {
+            "低確↓": [1,0,0,0,0,0,0,0,0,0],
+            "通常↓": [1,1,0,0,0,0,0,0,0,0],
+            "高確↓": [1,1,1,0,0,0,0,0,0,0],
+            "通常↑": [0,1,1,1,1,1,1,1,1,1],
+            "伝承↑": [0,0,0,0,1,1,1,1,1,1],
+            "天破前兆": [0,0,0,1,0,0,0,1,1,1]
+          };
           doCheck(pMap[h]);
         }
       }
@@ -175,7 +188,7 @@
 
       for (let m = 0; m < M; m++) {
         if (cur[m].isZero()) continue;
-        if (m === 3) { next[3] = next[3].plus(cur[3]); continue; } 
+        if (m === 3 || m === 7 || m === 8 || m === 9) { next[m] = next[m].plus(cur[m]); continue; } 
 
         let pWinVal = 0;
         if (m <= 2) {
@@ -186,7 +199,13 @@
         }
         let pWin = BigNumber(pWinVal / 100);
         let pStay = BigNumber(1).minus(pWin);
-        next[3] = next[3].plus(cur[m].times(pWin));
+        
+        if (m <= 2) {
+          next[3] = next[3].plus(cur[m].times(pWin));
+        } else {
+          const winState = (m === 4) ? 7 : (m === 5) ? 8 : 9;
+          next[winState] = next[winState].plus(cur[m].times(pWin));
+        }
 
         if (pStay.gt(0)) {
           if (m <= 2) {
@@ -276,11 +295,19 @@
     let html = "<tr><th>状態</th>";
     for(let s=1; s<=6; s++) html += `<th>設定${s}</th>`;
     html += "</tr>";
-    for (let m = 0; m < M; m++) {
-      html += `<tr><td>${labels[m]}</td>`;
+    for (let d = 0; d < 7; d++) {
+      html += `<tr><td>${labels[d]}</td>`;
       for (let s = 0; s < S; s++) {
         let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
-        let p = (sum.isZero() || modeTable[s][m].isZero()) ? "0" : modeTable[s][m].dividedBy(sum).times(100).toFixed(1);
+        let val = BigNumber(0);
+        if (d === 3) {
+          val = modeTable[s][3].plus(modeTable[s][7]).plus(modeTable[s][8]).plus(modeTable[s][9]);
+        } else if (d < 3) {
+          val = modeTable[s][d];
+        } else {
+          val = modeTable[s][d];
+        }
+        let p = (sum.isZero() || val.isZero()) ? "0" : val.dividedBy(sum).times(100).toFixed(1);
         html += `<td>${p}%</td>`;
       }
       html += "</tr>";
