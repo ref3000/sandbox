@@ -291,23 +291,15 @@
       document.getElementById("r" + s).textContent = p + "%";
     }
 
-    const labels = ["低確", "通常", "高確", "前兆", "伝承S", "伝承M", "伝承L"];
+    const labels = ["低確", "通常", "高確", "通常前兆", "伝承S", "伝承M", "伝承L", "伝S前兆", "伝M前兆", "伝L前兆"];
     let html = "<tr><th>状態</th>";
     for(let s=1; s<=6; s++) html += `<th>設定${s}</th>`;
     html += "</tr>";
-    for (let d = 0; d < 7; d++) {
-      html += `<tr><td>${labels[d]}</td>`;
+    for (let m = 0; m < M; m++) {
+      html += `<tr><td>${labels[m]}</td>`;
       for (let s = 0; s < S; s++) {
         let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
-        let val = BigNumber(0);
-        if (d === 3) {
-          val = modeTable[s][3].plus(modeTable[s][7]).plus(modeTable[s][8]).plus(modeTable[s][9]);
-        } else if (d < 3) {
-          val = modeTable[s][d];
-        } else {
-          val = modeTable[s][d];
-        }
-        let p = (sum.isZero() || val.isZero()) ? "0" : val.dividedBy(sum).times(100).toFixed(1);
+        let p = (sum.isZero() || modeTable[s][m].isZero()) ? "0" : modeTable[s][m].dividedBy(sum).times(100).toFixed(1);
         html += `<td>${p}%</td>`;
       }
       html += "</tr>";
