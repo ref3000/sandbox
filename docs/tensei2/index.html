@@ -274,7 +274,7 @@
 
     const labels = ["低確", "通常", "高確", "前兆", "伝承S", "伝承M", "伝承L"];
     let html = "<tr><th>状態</th>";
-    for(let s=1; s<=6; s++) html += `<th>${s}</th>`;
+    for(let s=1; s<=6; s++) html += `<th>設定${s}</th>`;
     html += "</tr>";
     for (let m = 0; m < M; m++) {
       html += `<tr><td>${labels[m]}</td>`;
