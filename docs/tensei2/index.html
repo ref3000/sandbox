@@ -17,8 +17,9 @@
   .b-yellow { background-color: #dcd15f; }
   .b-gray { background-color: #eeeeee; }
   .b-dark { background-color: #cccccc; }
-  table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 10px; }
-  th, td { border: 1px solid #ddd; padding: 8px 0; text-align: center; }
+  table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
+  th, td { border: 1px solid #ddd; padding: 8px 0; text-align: center; position: relative; }
+  .tgl { position: absolute; top: 1px; left: 1px; font-size: 7px; color: #888; }
   th { background-color: #f2f2f2; }
   #history { margin-top: 10px; padding: 4px; font-size: 12px; }
   .history-item { border-bottom: 1px solid #eee; padding: 4px; display: flex; justify-content: space-between; align-items: center; }
@@ -46,20 +47,21 @@
 </div>
 
 <div class="b-container">
+  <button onclick="apply('fall')" class="b-blue">ハズレ<br>リプレイ</button>
+  <button onclick="apply('bell')" class="b-yellow">斜めベル</button>
   <button onclick="apply('weak')" class="b-red">弱チェ</button>
   <button onclick="apply('suika')" class="b-green">スイカ</button>
   <button onclick="apply('chan')" class="b-yellow">チャンス<br>勝舞揃い</button>
   <button onclick="apply('strong')" class="b-red">強チェ</button>
-  <button onclick="apply('fall')" class="b-blue">ハズレ等<br>(転落)</button>
 </div>
 
 <div class="b-container">
-  <button onclick="check('低確↓', [1,0,0,0,0,0,0])" class="b-gray">低確↓</button>
-  <button onclick="check('通常↓', [1,1,0,0,0,0,0])" class="b-gray">通常↓</button>
-  <button onclick="check('高確↓', [1,1,1,0,0,0,0])" class="b-gray">高確↓</button>
-  <button onclick="check('伝承↑', [0,0,0,0,1,1,1])" class="b-green">伝承↑</button>
-  <button onclick="check('通常↑', [0,1,1,1,1,1,1])" class="b-gray">通常↑</button>
-  <button onclick="check('天破前兆', [0,0,0,1,0,0,0])" class="b-yellow">天破前兆</button>
+  <button onclick="check('低確↓', [1,0,0,0,0,0,0,0,0])" class="b-gray">低確↓</button>
+  <button onclick="check('通常↓', [1,1,0,0,0,0,0,0,0])" class="b-gray">通常↓</button>
+  <button onclick="check('高確↓', [1,1,1,0,0,0,0,0,0])" class="b-gray">高確↓</button>
+  <button onclick="check('通常↑', [0,1,1,1,1,1,1,1,1])" class="b-yellow">通常↑</button>
+  <button onclick="check('高確↑', [0,0,1,1,1,1,1,1,1])" class="b-yellow">高確↑</button>
+  <button onclick="check('天破本前兆', [0,0,0,0,0,0,1,1,1])" class="b-red">天破<br>本前兆</button>
 </div>
 
 <table id="table"></table>
@@ -68,27 +70,29 @@
 <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
 <script>
   const S = 6; 
-  const M = 10; // 0:低, 1:通, 2:高, 3:通常前兆, 4:伝承S, 5:伝承M, 6:伝承L, 7:伝承S前兆, 8:伝承M前兆, 9:伝承L前兆
+  const M = 9; // 0:低, 1:通, 2:高, 3:伝承S, 4:伝承M, 5:伝承L, 6:伝S前兆, 7:伝M前兆, 8:伝L前兆
   let modeTable = Array.from({ length: S }, () => Array.from({ length: M }, () => BigNumber(0)));
   let sr = Array.from({ length: S }, () => BigNumber(1));
   let history = []; 
+  let detailZencho = false;
+  let detailDensho = false;
 
   const historyMap = {
     "reset": "R", "at_end": "A", "tenpa_end": "E",
-    "weak": "w", "suika": "s", "chan": "c", "strong": "g", "fall": "f",
-    "低確↓": "L", "通常↓": "N", "高確↓": "K", "通常↑": "U", "伝承↑": "P", "天破前兆": "V"
+    "weak": "w", "suika": "s", "chan": "c", "strong": "g", "fall": "f", "bell": "b",
+    "低確↓": "L", "通常↓": "N", "高確↓": "K", "通常↑": "U", "高確↑": "H", "天破本前兆": "V"
   };
   const shortMap = Object.fromEntries(Object.entries(historyMap).map(([k, v]) => [v, k]));
 
   const displayMap = {
     "reset": "設定変更", "at_end": "AT終了", "tenpa_end": "天破終了",
-    "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞", "strong": "強チェ", "fall": "ハズレ等"
+    "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞", "strong": "強チェ", "fall": "ハズレリプレイ", "bell": "斜めベル"
   };
 
   const colorMap = {
     "reset": "b-dark", "at_end": "b-dark", "tenpa_end": "b-yellow",
-    "weak": "b-red", "suika": "b-green", "chan": "b-yellow", "strong": "b-red", "fall": "b-blue",
-    "低確↓": "b-gray", "通常↓": "b-gray", "高確↓": "b-gray", "通常↑": "b-gray", "伝承↑": "b-green", "天破前兆": "b-yellow"
+    "weak": "b-red", "suika": "b-green", "chan": "b-yellow", "strong": "b-red", "fall": "b-blue", "bell": "b-yellow",
+    "低確↓": "b-gray", "通常↓": "b-gray", "高確↓": "b-gray", "通常↑": "b-yellow", "高確↑": "b-yellow", "天破本前兆": "b-red"
   };
 
   // 伝承終了時の振分け [設定1..6][低, 通, 高]
@@ -109,14 +113,14 @@
             modeTable[s][0] = BigNumber(93.7 * 0.25);
             modeTable[s][1] = BigNumber(93.7 * 0.25);
             modeTable[s][2] = BigNumber(93.7 * 0.50);
-            modeTable[s][4] = BigNumber(6.3);
+            modeTable[s][3] = BigNumber(6.3);
           }
         }
         else if (h === 'at_end') {
           for(let s=0; s<S; s++) {
             modeTable[s][1] = BigNumber(98.4 * 0.406);
             modeTable[s][2] = BigNumber(98.4 * 0.594);
-            modeTable[s][4] = BigNumber(1.6);
+            modeTable[s][3] = BigNumber(1.6);
           }
         }
         else if (h === 'tenpa_end') {
@@ -124,16 +128,12 @@
             const cur = modeTable[s];
             const next = Array(M).fill(BigNumber(0));
             for(let m=0; m<M; m++) {
-              if (m === 3) {
-                next[4] = next[4].plus(cur[3].times(0.984));
-                next[5] = next[5].plus(cur[3].times(0.012));
-                next[6] = next[6].plus(cur[3].times(0.004));
+              if (m === 6) {
+                next[3] = next[3].plus(cur[6]);
               } else if (m === 7) {
                 next[4] = next[4].plus(cur[7]);
               } else if (m === 8) {
                 next[5] = next[5].plus(cur[8]);
-              } else if (m === 9) {
-                next[6] = next[6].plus(cur[9]);
               } else {
                 next[m] = next[m].plus(cur[m]);
               }
@@ -141,15 +141,15 @@
             modeTable[s] = next;
           }
         }
-        else if (['weak','suika','chan','strong','fall'].includes(h)) doApply(h);
+        else if (['weak','suika','chan','strong','fall','bell'].includes(h)) doApply(h);
         else if (shortMap[historyMap[h]]) {
           const pMap = {
-            "低確↓": [1,0,0,0,0,0,0,0,0,0],
-            "通常↓": [1,1,0,0,0,0,0,0,0,0],
-            "高確↓": [1,1,1,0,0,0,0,0,0,0],
-            "通常↑": [0,1,1,1,1,1,1,1,1,1],
-            "伝承↑": [0,0,0,0,1,1,1,1,1,1],
-            "天破前兆": [0,0,0,1,0,0,0,1,1,1]
+            "低確↓": [1,0,0,0,0,0,0,0,0],
+            "通常↓": [1,1,0,0,0,0,0,0,0],
+            "高確↓": [1,1,1,0,0,0,0,0,0],
+            "通常↑": [0,1,1,1,1,1,1,1,1],
+            "高確↑": [0,0,1,1,1,1,1,1,1],
+            "天破本前兆": [0,0,0,0,0,0,1,1,1]
           };
           doCheck(pMap[h]);
         }
@@ -164,9 +164,10 @@
       suika:  { L: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], N: [0.8, 0.8, 1.6, 2.3, 3.5, 4.7], H: 31.3 },
       chan:   { L: [2.0, 2.7, 3.1, 3.9, 4.7, 6.3], N: [10.2, 10.5, 10.9, 12.5, 15.6, 18.8], H: 66.4 },
       strong: { L: 25.0, N: 25.0, H: 100 },
-      fall:   { L: 0, N: 0, H: 0 }
+      fall:   { L: 0, N: 0, H: 0 },
+      bell:   { L: 0, N: 0, H: 0 }
     };
-    const winRatesDensho = { weak: 25.0, suika: 33.6, chan: 75.0, strong: 100, fall: 10.0 };
+    const winRatesDensho = { weak: 25.0, suika: 33.6, chan: 75.0, strong: 100, fall: 10.0, bell: 15.6 };
 
     const lowTrans = {
       weak: [ [53.1,46.1,0.8], [53.1,46.1,0.8], [52.0,46.9,1.2], [48.4,50.0,1.6], [37.5,59.4,3.1], [32.8,62.5,4.7] ],
@@ -176,10 +177,10 @@
     };
     const normToHigh = { weak: 46.9, suika: 66.4, chan: 71.9, strong: 100 };
 
-    const denshoFallProb = { 4: 0.328, 5: 0.047, 6: 0.012 };
+    const denshoFallProb = { 3: 0.328, 4: 0.047, 5: 0.012 };
     const denshoUp = {
-      4: { weak: [12.5, 0], suika: [12.5, 0.4], chan: [24.6, 0.4], strong: [99.6, 0.4] },
-      5: { weak: 0.4, suika: 0.8, chan: 1.6, strong: 1.6 }
+      3: { weak: [12.5, 0], suika: [12.5, 0], chan: [24.6, 0.4], strong: [99.6, 0.4] },
+      4: { weak: 0.4, suika: 0.4, chan: 0.8, strong: 1.6 }
     };
 
     for (let s = 0; s < S; s++) {
@@ -188,7 +189,21 @@
 
       for (let m = 0; m < M; m++) {
         if (cur[m].isZero()) continue;
-        if (m === 3 || m === 7 || m === 8 || m === 9) { next[m] = next[m].plus(cur[m]); continue; } 
+        if (m === 6 || m === 7 || m === 8) {
+          const upTarget = (m === 6) ? 3 : (m === 7) ? 4 : 5;
+          const up = denshoUp[upTarget] ? denshoUp[upTarget][role] : null;
+          if (m === 6 && up) {
+            next[7] = next[7].plus(cur[6].times(up[0]/100));
+            next[8] = next[8].plus(cur[6].times(up[1]/100));
+            next[6] = next[6].plus(cur[6].times(1 - (up[0]+up[1])/100));
+          } else if (m === 7 && up) {
+            next[8] = next[8].plus(cur[7].times(up/100));
+            next[7] = next[7].plus(cur[7].times(1 - up/100));
+          } else {
+            next[m] = next[m].plus(cur[m]);
+          }
+          continue;
+        }
 
         let pWinVal = 0;
         if (m <= 2) {
@@ -201,15 +216,17 @@
         let pStay = BigNumber(1).minus(pWin);
         
         if (m <= 2) {
-          next[3] = next[3].plus(cur[m].times(pWin));
+          next[6] = next[6].plus(cur[m].times(pWin).times(0.984));
+          next[7] = next[7].plus(cur[m].times(pWin).times(0.012));
+          next[8] = next[8].plus(cur[m].times(pWin).times(0.004));
         } else {
-          const winState = (m === 4) ? 7 : (m === 5) ? 8 : 9;
+          const winState = (m === 3) ? 6 : (m === 4) ? 7 : 8;
           next[winState] = next[winState].plus(cur[m].times(pWin));
         }
 
         if (pStay.gt(0)) {
           if (m <= 2) {
-            if (role === 'fall') {
+            if (role === 'fall' || role === 'bell') {
               if (m === 1) { next[0] = next[0].plus(cur[1].times(pStay).times(0.023)); next[1] = next[1].plus(cur[1].times(pStay).times(0.977)); }
               else if (m === 2) { next[1] = next[1].plus(cur[2].times(pStay).times(0.023)); next[2] = next[2].plus(cur[2].times(pStay).times(0.977)); }
               else next[m] = next[m].plus(cur[m].times(pStay));
@@ -236,13 +253,13 @@
               next[2] = next[2].plus(cur[m].times(pStay).times(pFall).times(dist[2]/100));
             } else {
               const up = denshoUp[m] ? denshoUp[m][role] : null;
-              if (m === 4 && up) {
-                next[5] = next[5].plus(cur[4].times(pStay).times(up[0]/100));
-                next[6] = next[6].plus(cur[4].times(pStay).times(up[1]/100));
-                next[4] = next[4].plus(cur[4].times(pStay).times(1 - (up[0]+up[1])/100));
-              } else if (m === 5 && up) {
-                next[6] = next[6].plus(cur[5].times(pStay).times(up/100));
-                next[5] = next[5].plus(cur[5].times(pStay).times(1 - up/100));
+              if (m === 3 && up) {
+                next[4] = next[4].plus(cur[3].times(pStay).times(up[0]/100));
+                next[5] = next[5].plus(cur[3].times(pStay).times(up[1]/100));
+                next[3] = next[3].plus(cur[3].times(pStay).times(1 - (up[0]+up[1])/100));
+              } else if (m === 4 && up) {
+                next[5] = next[5].plus(cur[4].times(pStay).times(up/100));
+                next[4] = next[4].plus(cur[4].times(pStay).times(1 - up/100));
               } else {
                 next[m] = next[m].plus(cur[m].times(pStay));
               }
@@ -283,6 +300,7 @@
   function onClearHistory() { history = []; calcHistory(); }
   function historyRemove(i) { history.splice(i, 1); calcHistory(); }
   function historyDown(i) { if (i <= 0) return; [history[i], history[i-1]] = [history[i-1], history[i]]; calcHistory(); }
+  function toggleDetail(g) { if (g === 'zencho') detailZencho = !detailZencho; else detailDensho = !detailDensho; updateUI(); }
 
   function updateUI() {
     let totalSr = sr.reduce((a, b) => a.plus(b), BigNumber(0));
@@ -291,11 +309,14 @@
       document.getElementById("r" + s).textContent = p + "%";
     }
 
-    const labels = ["低確", "通常", "高確", "通常前兆", "伝承S", "伝承M", "伝承L", "伝S前兆", "伝M前兆", "伝L前兆"];
-    let html = "<tr><th>状態</th>";
+    const labels = ["低確", "通常", "高確", "伝承S", "伝承M", "伝承L", "伝S前兆", "伝M前兆", "伝L前兆"];
+    let html = '<colgroup><col style="width:46px">' + '<col>'.repeat(6) + '</colgroup>';
+    html += "<tr><th>状態</th>";
     for(let s=1; s<=6; s++) html += `<th>設定${s}</th>`;
     html += "</tr>";
-    for (let m = 0; m < M; m++) {
+
+    // 低確・通常・高確
+    for (let m = 0; m <= 2; m++) {
       html += `<tr><td>${labels[m]}</td>`;
       for (let s = 0; s < S; s++) {
         let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
@@ -303,6 +324,37 @@
         html += `<td>${p}%</td>`;
       }
       html += "</tr>";
+    }
+
+    // 前兆・伝承
+    const groups = [
+      { key: 'zencho', label: "前兆", modes: [6, 7, 8], detailLabels: ["伝S前兆", "伝M前兆", "伝L前兆"] },
+      { key: 'densho', label: "伝承", modes: [3, 4, 5], detailLabels: ["伝承S", "伝承M", "伝承L"] }
+    ];
+    for (const g of groups) {
+      const expanded = g.key === 'zencho' ? detailZencho : detailDensho;
+      if (expanded) {
+        for (let j = 0; j < g.modes.length; j++) {
+          const m = g.modes[j];
+          const icon = j === 0 ? '<span class="tgl">▼</span>' : '';
+          html += `<tr onclick="toggleDetail('${g.key}')" style="cursor:pointer"><td>${icon}${g.detailLabels[j]}</td>`;
+          for (let s = 0; s < S; s++) {
+            let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
+            let p = (sum.isZero() || modeTable[s][m].isZero()) ? "0" : modeTable[s][m].dividedBy(sum).times(100).toFixed(1);
+            html += `<td>${p}%</td>`;
+          }
+          html += "</tr>";
+        }
+      } else {
+        html += `<tr onclick="toggleDetail('${g.key}')" style="cursor:pointer"><td><span class="tgl">▶</span>${g.label}</td>`;
+        for (let s = 0; s < S; s++) {
+          let sum = modeTable[s].reduce((a, b) => a.plus(b), BigNumber(0));
+          let groupSum = g.modes.reduce((a, m) => a.plus(modeTable[s][m]), BigNumber(0));
+          let p = (sum.isZero() || groupSum.isZero()) ? "0" : groupSum.dividedBy(sum).times(100).toFixed(1);
+          html += `<td>${p}%</td>`;
+        }
+        html += "</tr>";
+      }
     }
     document.getElementById("table").innerHTML = html;
 
