@@ -41,7 +41,7 @@
 <div class="b-container">
   <button onclick="onReset('reset')" class="b-dark">設定変更</button>
   <button onclick="onReset('at_end')" class="b-dark">AT終了</button>
-  <button onclick="apply('tenpa_end')" class="b-yellow">天破終了</button>
+  <button onclick="onTenpaEnd()" class="b-yellow">天破終了</button>
   <div style="width: 50px;"></div>
   <button onclick="onClearHistory()" class="b-red">履歴<br>全消去</button>
 </div>
@@ -308,6 +308,19 @@
   function apply(t) { pushHistory(t); }
   function check(t, p) { pushHistory(t); }
   function onReset(t) { pushHistory(t); }
+  function onTenpaEnd() {
+    let hasNormal = false;
+    for (let s = 0; s < S; s++) {
+      if (modeTable[s][0].gt(0) || modeTable[s][1].gt(0) || modeTable[s][2].gt(0)) {
+        hasNormal = true;
+        break;
+      }
+    }
+    if (hasNormal) {
+      pushHistory('天破本前兆');
+    }
+    pushHistory('tenpa_end');
+  }
   function onClearHistory() { history = []; calcHistory(); }
   function historyRemove(i) { history.splice(i, 1); calcHistory(); }
   function historyDown(i) { if (i <= 0) return; [history[i], history[i-1]] = [history[i-1], history[i]]; calcHistory(); }
