@@ -86,7 +86,7 @@
 
   const displayMap = {
     "reset": "設定変更", "at_end": "AT終了", "tenpa_end": "天破終了",
-    "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞", "strong": "強チェ", "fall": "ハズレリプレイ", "bell": "斜めベル"
+    "weak": "弱チェ", "suika": "スイカ", "chan": "チャンス勝舞揃い", "strong": "強チェ", "fall": "ハズレリプレイ", "bell": "斜めベル"
   };
 
   const colorMap = {
@@ -118,9 +118,20 @@
         }
         else if (h === 'at_end') {
           for(let s=0; s<S; s++) {
-            modeTable[s][1] = BigNumber(98.4 * 0.406);
-            modeTable[s][2] = BigNumber(98.4 * 0.594);
-            modeTable[s][3] = BigNumber(1.6);
+            const cur = modeTable[s];
+            const next = Array(M).fill(BigNumber(0));
+            const total = cur.reduce((a, b) => a.plus(b), BigNumber(0));
+            const pNormal = total.isZero() ? BigNumber(100) : cur[0].plus(cur[1]).plus(cur[2]);
+            
+            next[3] = cur[3].plus(cur[6]);
+            next[4] = cur[4].plus(cur[7]);
+            next[5] = cur[5].plus(cur[8]);
+            
+            next[1] = pNormal.times(0.984 * 0.406);
+            next[2] = pNormal.times(0.984 * 0.594);
+            next[3] = next[3].plus(pNormal.times(0.016));
+            
+            modeTable[s] = next;
           }
         }
         else if (h === 'tenpa_end') {
