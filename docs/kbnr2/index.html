@@ -12,8 +12,12 @@
   .b-container { display: flex; justify-content: space-around; margin-top: 8px; padding: 0 4px; }
   button { width: 50px; height: 50px; font-size: 9px; text-align: center; border: 1px solid #999; border-radius: 4px; background: #fff; cursor: pointer; }
   .b-blue { background-color: #a0d8ef; }
+  .b-green-light { background-color: #a9cc8f; }
   .b-green { background-color: #83b85d; }
+  .b-green-dark { background-color: #5d9b33; }
+  .b-red-light { background-color: #fad1d2; }
   .b-red { background-color: #f69ea1; }
+  .b-red-dark { background-color: #e27376; }
   .b-yellow { background-color: #dcd15f; }
   .b-gray { background-color: #eeeeee; }
   .b-dark { background-color: #cccccc; }
@@ -48,20 +52,20 @@
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【CZ関連】</summary>
   <div class="b-container">
-    <button onclick="apply('mumei_off')" class="b-red">無名<br>発光なし</button>
-    <button onclick="apply('mumei_on')" class="b-red">無名<br>発光中</button>
+    <button onclick="apply('mumei_off')" class="b-red-light">無名<br>発光なし</button>
+    <button onclick="apply('mumei_on')" class="b-red-light">無名<br>発光中</button>
     <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
     <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
     <button onclick="apply('combo_mumei')" class="b-red">複合無名</button>
-    <button onclick="apply('combo_mumei_high')" class="b-red">複合無名<br>高確帯</button>
+    <button onclick="apply('combo_mumei_high')" class="b-red-dark">複合無名<br>高確帯</button>
   </div>
   <div class="b-container">
-    <button onclick="apply('ikoma_off')" class="b-green">生駒<br>発光なし</button>
-    <button onclick="apply('ikoma_on')" class="b-green">生駒<br>発光中</button>
+    <button onclick="apply('ikoma_off')" class="b-green-light">生駒<br>発光なし</button>
+    <button onclick="apply('ikoma_on')" class="b-green-light">生駒<br>発光中</button>
     <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
     <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
     <button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button>
-    <button onclick="apply('combo_ikoma_high')" class="b-green">複合生駒<br>高確帯</button>
+    <button onclick="apply('combo_ikoma_high')" class="b-green-dark">複合生駒<br>高確帯</button>
   </div>
   <div class="b-container">
     <button onclick="apply('cz_mumei')" class="b-red">無名CZ<br>当選</button>
@@ -84,10 +88,10 @@
     <button onclick="apply('voice_kurusu')" class="b-purple">来栖<br>あの世</button>
   </div>
   <div class="b-container">
-    <button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故</button>
-    <button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人か</button>
-    <button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>最後</button>
-    <button onclick="apply('voice_mumei_futsu')" class="b-red">この台に</button>
+    <button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故言わ</button>
+    <button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人カバネ</button>
+    <button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>今年最後</button>
+    <button onclick="apply('voice_mumei_futsu')" class="b-red">無名<br>この台</button>
     <button onclick="apply('voice_none')" class="b-gray">ボイス<br>なし</button>
     <div style="flex: 1 1 20%; margin: 2px;"></div>
   </div>
@@ -136,18 +140,18 @@
     "cz_allstar_douai": "オールスター 銅藍当選", "yuri_cut": "有利切れ",
     "voice_f": "ボイス 女性", "voice_m": "ボイス 男性", "voice_none": "ボイス なし",
     "voice_mumei_shukon": "ボイス 無名ｼｭｺﾝ", "voice_ayame": "ボイス 菖蒲おまんじゅう", "voice_ikoma": "ボイス 生駒俺の誇れる",
-    "voice_kurusu": "ボイス 来栖あの世で", "voice_kage_naze": "ボイス 景行何故", "voice_kage_hito": "ボイス 景行人か",
-    "voice_kage_kotoshi": "ボイス 景行最後", "voice_mumei_futsu": "ボイス この台に",
+    "voice_kurusu": "ボイス 来栖あの世で", "voice_kage_naze": "ボイス 景行何故言わ", "voice_kage_hito": "ボイス 景行人カバネ",
+    "voice_kage_kotoshi": "ボイス 景行今年最後", "voice_mumei_futsu": "ボイス 無名この台",
     "char_f": "キャラ 女性", "char_m": "キャラ 男性", "char_biba": "キャラ 美馬",
     "st_default": "ST画面 デフォルト", "st_shugo": "ST画面 メンバー集合", "st_mizugi": "ST画面 水着",
     "low_bell": "下段ベル"
   };
 
   const colorMap = {
-    "mumei_off": "b-red", "mumei_on": "b-red", "mumei_lit": "b-red",
-    "mumei_high": "b-red", "combo_mumei": "b-red", "combo_mumei_high": "b-red",
-    "ikoma_off": "b-green", "ikoma_on": "b-green", "ikoma_lit": "b-green",
-    "ikoma_high": "b-green", "combo_ikoma": "b-green", "combo_ikoma_high": "b-green",
+    "mumei_off": "b-red-light", "mumei_on": "b-red-light", "mumei_lit": "b-red",
+    "mumei_high": "b-red", "combo_mumei": "b-red", "combo_mumei_high": "b-red-dark",
+    "ikoma_off": "b-green-light", "ikoma_on": "b-green-light", "ikoma_lit": "b-green",
+    "ikoma_high": "b-green", "combo_ikoma": "b-green", "combo_ikoma_high": "b-green-dark",
     "cz_mumei": "b-red", "cz_mumei_douai": "b-red",
     "cz_ikoma": "b-green", "cz_ikoma_douai": "b-green",
     "cz_allstar_douai": "b-blue", "yuri_cut": "b-gray",
