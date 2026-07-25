@@ -261,6 +261,10 @@
         if (currentMumeiPts >= 15) applyIndependentRates(getNonWinRates(currentMumeiPts), 1);
         if (currentIkomaPts >= 15) applyIndependentRates(getNonWinRates(currentIkomaPts), 1);
         
+        if (currentMumeiPts > 0 || currentIkomaPts > 0) {
+          item.ptsStr = ` (無名:${currentMumeiPts}pt 生駒:${currentIkomaPts}pt)`;
+        }
+        
         currentMumeiPts = 0;
         currentIkomaPts = 0;
       }
