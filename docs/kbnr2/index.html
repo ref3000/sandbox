@@ -111,6 +111,12 @@
   let sr = Array.from({ length: S }, () => BigNumber(1));
   let history = []; 
 
+  function applyIndependentRates(rates, count) {
+    for (let s = 0; s < S; s++) {
+      sr[s] = sr[s].times(BigNumber(rates[s]).pow(count));
+    }
+  }
+
   const displayMap = {
     "mumei_off": "無名 発光なし", "mumei_on": "無名 発光中", "mumei_lit": "無名 発光",
     "mumei_high": "無名 高確帯", "combo_mumei": "複合無名", "combo_mumei_high": "複合無名 高確帯",
@@ -178,6 +184,9 @@
         currentMumeiPts = 0;
         currentIkomaPts = 0;
       }
+      else if (h === 'char_f') applyIndependentRates([0.5000, 0.5750, 0.4150, 0.5850, 0.3990, 0.6000], c);
+      else if (h === 'char_m') applyIndependentRates([0.5000, 0.4250, 0.5850, 0.4140, 0.6000, 0.3985], c);
+      else if (h === 'char_biba') applyIndependentRates([0.0000, 0.0000, 0.0000, 0.0010, 0.0010, 0.0015], c);
     });
 
     updateUI();
