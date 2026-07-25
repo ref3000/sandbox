@@ -37,11 +37,12 @@
 <div class="padding-top"></div>
 
 <div class="b-container">
-  <button onclick="onClearHistory()" class="b-dark" style="width: 50px;">履歴<br>全消去</button>
-  <div style="width: 250px; text-align: center; font-size: 14px; font-weight: bold; line-height: 50px; background: #fff; border: 1px solid #999; border-radius: 4px;">
-    無名: <span id="mumei-pt" style="color: #e74c3c;">0</span>pt &nbsp;|&nbsp; 
-    生駒: <span id="ikoma-pt" style="color: #2ecc71;">0</span>pt
+  <button onclick="onClearHistory()" class="b-dark">履歴<br>全消去</button>
+  <div style="flex-grow: 1; text-align: center; font-size: 14px; font-weight: bold; background: #fff; border: 1px solid #ccc; border-radius: 4px; margin: 2px; display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px;">
+    無名:<span id="mumei-pt" style="color: #e74c3c;">0</span>pt | 
+    生駒:<span id="ikoma-pt" style="color: #2ecc71;">0</span>pt
   </div>
+  <button onclick="document.getElementById('infoModal').style.display='block'" class="b-gray">確率<br>確認</button>
 </div>
 
 <div class="b-container">
@@ -101,9 +102,8 @@
 <div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【下段ベル】</div>
 <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px;">
   <input type="number" id="bell_g" placeholder="G数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
-  <button onclick="apply('low_bell')" class="b-yellow" style="width: 100px; font-size: 12px;">下段ベル<br>(履歴追加)</button>
+  <button onclick="apply('low_bell')" class="b-yellow">下段ベル<br>(履歴追加)</button>
 </div>
-<button onclick="document.getElementById('infoModal').style.display='block'" class="b-gray" style="width: calc(100% - 8px); margin: 10px 4px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background: #eee; font-weight: bold; cursor: pointer;">内部確率・解析情報を確認</button>
 
 <div id="history"></div>
 
