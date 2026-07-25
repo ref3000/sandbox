@@ -358,7 +358,12 @@
   }
 
   function apply(t) { pushHistory(t); }
-  function onClearHistory() { history = []; calcHistory(); }
+  function onClearHistory() { 
+    history = []; 
+    const bellGInput = document.getElementById("bell_g");
+    if (bellGInput) bellGInput.value = "";
+    calcHistory(); 
+  }
   function historyRemove(i) { history.splice(i, 1); calcHistory(); }
   function historyDown(i) { if (i <= 0) return; [history[i], history[i-1]] = [history[i-1], history[i]]; calcHistory(); }
 
