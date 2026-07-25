@@ -37,13 +37,13 @@
 <div class="padding-top"></div>
 
 <div class="b-container">
-  <button onclick="onClearHistory()" class="b-red" style="width: 100px;">履歴全消去</button>
-  <button onclick="apply('cz_hit')" class="b-blue">CZ当選</button>
-  <button onclick="apply('cz_end')" class="b-dark">CZ終了<br>(リセット)</button>
+  <button onclick="onClearHistory()" class="b-dark" style="width: 50px;">履歴<br>全消去</button>
+  <button onclick="apply('all_star')" class="b-yellow" style="width: 50px;">オール<br>スター</button>
+  <div style="width: 150px;"></div>
 </div>
 
 <div class="b-container">
-  <button onclick="apply('mumei_off')" class="b-red">無名<br>非発光</button>
+  <button onclick="apply('mumei_off')" class="b-red">無名<br>発光なし</button>
   <button onclick="apply('mumei_on')" class="b-red">無名<br>発光中</button>
   <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
   <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
@@ -52,7 +52,7 @@
 </div>
 
 <div class="b-container">
-  <button onclick="apply('ikoma_off')" class="b-green">生駒<br>非発光</button>
+  <button onclick="apply('ikoma_off')" class="b-green">生駒<br>発光なし</button>
   <button onclick="apply('ikoma_on')" class="b-green">生駒<br>発光中</button>
   <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
   <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
@@ -61,7 +61,12 @@
 </div>
 
 <div class="b-container">
-  <button onclick="apply('all_star')" class="b-yellow" style="width: 100px;">オールスター目</button>
+  <button onclick="apply('cz_mumei')" class="b-blue">無名CZ<br>当選</button>
+  <button onclick="apply('cz_mumei_douai')" class="b-blue">無名CZ<br>銅藍当選</button>
+  <button onclick="apply('cz_ikoma')" class="b-blue">生駒CZ<br>当選</button>
+  <button onclick="apply('cz_ikoma_douai')" class="b-blue">生駒CZ<br>銅藍当選</button>
+  <button onclick="apply('cz_allstar_douai')" class="b-blue">ｵｰﾙｽﾀｰ<br>銅藍当選</button>
+  <button onclick="apply('yuri_cut')" class="b-gray">有利切れ</button>
 </div>
 
 <div class="b-container">
@@ -77,21 +82,25 @@
   let history = []; 
 
   const displayMap = {
-    "mumei_off": "無名 非発光",
+    "mumei_off": "無名 発光なし",
     "mumei_on": "無名 発光中",
     "mumei_lit": "無名 発光",
     "mumei_high": "無名 高確帯",
     "combo_mumei": "複合無名",
     "combo_mumei_high": "複合無名 高確帯",
-    "ikoma_off": "生駒 非発光",
+    "ikoma_off": "生駒 発光なし",
     "ikoma_on": "生駒 発光中",
     "ikoma_lit": "生駒 発光",
     "ikoma_high": "生駒 高確帯",
     "combo_ikoma": "複合生駒",
     "combo_ikoma_high": "複合生駒 高確帯",
     "all_star": "オールスター目",
-    "cz_hit": "CZ当選",
-    "cz_end": "CZ終了(リセット)",
+    "cz_mumei": "無名CZ 当選",
+    "cz_mumei_douai": "無名CZ 銅藍当選",
+    "cz_ikoma": "生駒CZ 当選",
+    "cz_ikoma_douai": "生駒CZ 銅藍当選",
+    "cz_allstar_douai": "オールスター 銅藍当選",
+    "yuri_cut": "有利切れ",
     "end_default": "終了画面(デフォルト)",
     "end_high": "終了画面(高設定示唆)"
   };
@@ -110,8 +119,12 @@
     "combo_ikoma": "b-green",
     "combo_ikoma_high": "b-green",
     "all_star": "b-yellow",
-    "cz_hit": "b-blue",
-    "cz_end": "b-dark",
+    "cz_mumei": "b-blue",
+    "cz_mumei_douai": "b-blue",
+    "cz_ikoma": "b-blue",
+    "cz_ikoma_douai": "b-blue",
+    "cz_allstar_douai": "b-blue",
+    "yuri_cut": "b-gray",
     "end_default": "b-gray",
     "end_high": "b-yellow"
   };
