@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>kbnr2設定判別</title>
+<meta name="viewport" content="width=320,user-scalable=no">
+<style>
+  html, body { margin: 0; padding: 0; font-family: sans-serif; background: #fdfdfd; }
+  header { background: #d0eaff; position: fixed; width: 320px; height: 35px; display: flex; align-items: center; z-index: 100; border-bottom: 1px solid #ccc; }
+  .rt { font-size: 10px; margin-left: 4px; color: #666; }
+  .result { width: 34px; font-size: 10px; font-weight: bold; text-align: right; margin-right: 4px; }
+  .padding-top { height: 40px; }
+  .b-container { display: flex; justify-content: space-around; margin-top: 8px; padding: 0 4px; }
+  button { width: 50px; height: 50px; font-size: 9px; text-align: center; border: 1px solid #999; border-radius: 4px; background: #fff; cursor: pointer; }
+  .b-blue { background-color: #a0d8ef; }
+  .b-green { background-color: #83b85d; }
+  .b-red { background-color: #f69ea1; }
+  .b-yellow { background-color: #dcd15f; }
+  .b-gray { background-color: #eeeeee; }
+  .b-dark { background-color: #cccccc; }
+  .b-purple { background-color: #cda8d8; }
+  #history { margin-top: 10px; padding: 4px; font-size: 12px; }
+  .history-item { border-bottom: 1px solid #eee; padding: 4px; display: flex; justify-content: space-between; align-items: center; }
+  .history-bt { width: 24px; height: 24px; font-size: 10px; margin-left: 2px; border: 1px solid #999; border-radius: 2px; background: #fff; cursor: pointer; }
+  .history-label { flex-grow: 1; margin-left: 4px; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/8.1.1/bignumber.min.js"></script>
+</head>
+<body>
+<header>
+  <span class="rt">1:</span><span id="r0" class="result"></span>
+  <span class="rt">2:</span><span id="r1" class="result"></span>
+  <span class="rt">3:</span><span id="r2" class="result"></span>
+  <span class="rt">4:</span><span id="r3" class="result"></span>
+  <span class="rt">5:</span><span id="r4" class="result"></span>
+  <span class="rt">6:</span><span id="r5" class="result"></span>
+</header>
+<div class="padding-top"></div>
+
+<div class="b-container">
+  <button onclick="onClearHistory()" class="b-red" style="width: 100px;">履歴全消去</button>
+  <button onclick="apply('cz_hit')" class="b-blue">CZ当選</button>
+  <button onclick="apply('cz_end')" class="b-dark">CZ終了<br>(リセット)</button>
+</div>
+
+<div class="b-container">
+  <button onclick="apply('mumei_off')" class="b-red">無名<br>非発光</button>
+  <button onclick="apply('mumei_on')" class="b-red">無名<br>発光中</button>
+  <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
+  <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
+  <button onclick="apply('combo_mumei')" class="b-red">複合無名</button>
+  <button onclick="apply('combo_mumei_high')" class="b-red">複合無名<br>高確帯</button>
+</div>
+
+<div class="b-container">
+  <button onclick="apply('ikoma_off')" class="b-green">生駒<br>非発光</button>
+  <button onclick="apply('ikoma_on')" class="b-green">生駒<br>発光中</button>
+  <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
+  <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
+  <button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button>
+  <button onclick="apply('combo_ikoma_high')" class="b-green">複合生駒<br>高確帯</button>
+</div>
+
+<div class="b-container">
+  <button onclick="apply('all_star')" class="b-yellow" style="width: 100px;">オールスター目</button>
+</div>
+
+<div class="b-container">
+  <button onclick="apply('end_default')" class="b-gray" style="width: 150px;">AT終了画面<br>デフォルト</button>
+  <button onclick="apply('end_high')" class="b-yellow" style="width: 150px;">AT終了画面<br>高設定示唆</button>
+</div>
+
+<div id="history"></div>
+
+<script>
+  const S = 6;
+  let sr = Array.from({ length: S }, () => BigNumber(1));
+  let history = []; 
+
+  const displayMap = {
+    "mumei_off": "無名 非発光",
+    "mumei_on": "無名 発光中",
+    "mumei_lit": "無名 発光",
+    "mumei_high": "無名 高確帯",
+    "combo_mumei": "複合無名",
+    "combo_mumei_high": "複合無名 高確帯",
+    "ikoma_off": "生駒 非発光",
+    "ikoma_on": "生駒 発光中",
+    "ikoma_lit": "生駒 発光",
+    "ikoma_high": "生駒 高確帯",
+    "combo_ikoma": "複合生駒",
+    "combo_ikoma_high": "複合生駒 高確帯",
+    "all_star": "オールスター目",
+    "cz_hit": "CZ当選",
+    "cz_end": "CZ終了(リセット)",
+    "end_default": "終了画面(デフォルト)",
+    "end_high": "終了画面(高設定示唆)"
+  };
+
+  const colorMap = {
+    "mumei_off": "b-red",
+    "mumei_on": "b-red",
+    "mumei_lit": "b-red",
+    "mumei_high": "b-red",
+    "combo_mumei": "b-red",
+    "combo_mumei_high": "b-red",
+    "ikoma_off": "b-green",
+    "ikoma_on": "b-green",
+    "ikoma_lit": "b-green",
+    "ikoma_high": "b-green",
+    "combo_ikoma": "b-green",
+    "combo_ikoma_high": "b-green",
+    "all_star": "b-yellow",
+    "cz_hit": "b-blue",
+    "cz_end": "b-dark",
+    "end_default": "b-gray",
+    "end_high": "b-yellow"
+  };
+
+  function calcHistory() {
+    sr = Array.from({ length: S }, () => BigNumber(1));
+    
+    // TODO: ポイントの蓄積や単独フラグの確率計算ロジックを実装する
+    
+    history.forEach(item => {
+      const h = item.t;
+      // 例: 単独設定差の適用イメージ
+      // if (h === 'end_default') applyIndependentRates([0.5, 0.5, 0.4, 0.4, 0.3, 0.3]);
+    });
+
+    updateUI();
+  }
+
+  function pushHistory(t) {
+    if (history.length > 0 && history[history.length - 1].t === t) { 
+      history[history.length - 1].c++; 
+    } else { 
+      history.push({ t: t, c: 1 }); 
+    }
+    calcHistory();
+  }
+
+  function apply(t) { pushHistory(t); }
+  function onClearHistory() { history = []; calcHistory(); }
+  function historyRemove(i) { history.splice(i, 1); calcHistory(); }
+  function historyDown(i) { if (i <= 0) return; [history[i], history[i-1]] = [history[i-1], history[i]]; calcHistory(); }
+
+  function updateUI() {
+    let totalSr = sr.reduce((a, b) => a.plus(b), BigNumber(0));
+    for (let s = 0; s < S; s++) {
+      const p = totalSr.isZero() ? "0.00" : sr[s].dividedBy(totalSr).times(100).toFixed(2);
+      document.getElementById("r" + s).textContent = p + "%";
+    }
+
+    const histDiv = document.getElementById("history");
+    let hHtml = "";
+    for (let i = history.length - 1; i >= 0; i--) {
+      const item = history[i];
+      const dLabel = displayMap[item.t] || item.t;
+      const label = item.c > 1 ? `${dLabel} x ${item.c}` : dLabel;
+      const col = colorMap[item.t] || "b-gray";
+      
+      hHtml += `<div class="history-item ${col}">`;
+      hHtml += `<span class="history-label">${history.length - i}. ${label}</span>`;
+      hHtml += `<div>`;
+      hHtml += `<button class="history-bt" onclick="historyDown(${i})">↓</button>`;
+      hHtml += `<button class="history-bt" onclick="historyRemove(${i})">×</button>`;
+      hHtml += `</div></div>`;
+    }
+    histDiv.innerHTML = hHtml;
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
