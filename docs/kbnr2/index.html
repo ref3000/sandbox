@@ -112,9 +112,13 @@
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【下段ベル】</summary>
   <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px; align-items: center;">
-    <input type="number" id="bell_g" placeholder="G数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
     <button onclick="apply('low_bell')" class="b-yellow">下段ベル</button>
-    <div id="bell_prob" style="font-size: 13px; font-weight: bold; color: #555; margin-left: 5px;"></div>
+    <div style="font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+      <span id="bell_count">0</span>
+      <span style="color:#777;">/</span>
+      <input type="number" id="bell_g" placeholder="G数" style="width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
+      <span id="bell_prob" style="color: #555; margin-left: 4px;"></span>
+    </div>
   </div>
 </details>
 
@@ -245,7 +249,7 @@
       const bellProbDiv = document.getElementById("bell_prob");
       if (bellProbDiv) {
         if (bellK > 0) {
-          bellProbDiv.textContent = "1/" + (bellN / bellK).toFixed(1);
+          bellProbDiv.textContent = "= 1/" + (bellN / bellK).toFixed(1);
         } else {
           bellProbDiv.textContent = "";
         }
@@ -254,6 +258,9 @@
       const bellProbDiv = document.getElementById("bell_prob");
       if (bellProbDiv) bellProbDiv.textContent = "";
     }
+
+    const bellCountDiv = document.getElementById("bell_count");
+    if (bellCountDiv) bellCountDiv.textContent = bellK;
 
     updateUI();
   }
