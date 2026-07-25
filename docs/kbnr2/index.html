@@ -170,6 +170,17 @@
     "low_bell": "b-yellow"
   };
 
+  const compressMap = {
+    "mumei_off": "a", "mumei_on": "b", "mumei_lit": "c", "mumei_high": "d", "combo_mumei": "e", "combo_mumei_high": "f",
+    "ikoma_off": "g", "ikoma_on": "h", "ikoma_lit": "i", "ikoma_high": "j", "combo_ikoma": "k", "combo_ikoma_high": "l",
+    "cz_mumei": "m", "cz_mumei_douai": "n", "cz_ikoma": "o", "cz_ikoma_douai": "p", "cz_allstar_douai": "q", "yuri_cut": "r",
+    "voice_f": "s", "voice_m": "t", "voice_none": "u", "voice_mumei_shukon": "v", "voice_ayame": "w", "voice_ikoma": "x",
+    "voice_kurusu": "y", "voice_kage_naze": "z", "voice_kage_hito": "A", "voice_kage_kotoshi": "B", "voice_mumei_futsu": "C",
+    "char_f": "D", "char_m": "E", "char_biba": "F", "st_default": "G", "st_shugo": "H", "st_mizugi": "I", "low_bell": "J"
+  };
+  const decompressMap = {};
+  for(let k in compressMap) decompressMap[compressMap[k]] = k;
+
   let currentMumeiPts = 0;
   let currentIkomaPts = 0;
 
@@ -270,7 +281,13 @@
   function updateURL() {
     const params = new URLSearchParams();
     if (history.length > 0) {
-      const hStr = history.map(item => `${item.t}:${item.c}`).join(',');
+      let hStr = "";
+      history.forEach(item => {
+        const char = compressMap[item.t];
+        if (char) {
+          for (let i = 0; i < item.c; i++) hStr += char;
+        }
+      });
       params.set('h', hStr);
     }
     const bellGInput = document.getElementById("bell_g").value;
@@ -333,11 +350,24 @@
     }
     const hParam = params.get('h');
     if (hParam) {
-      const items = hParam.split(',');
-      for (const item of items) {
-        const [t, c] = item.split(':');
-        if (t && c) {
-          history.push({ t: t, c: parseInt(c, 10) });
+      if (hParam.includes(':')) {
+        const items = hParam.split(',');
+        for (const item of items) {
+          const [t, c] = item.split(':');
+          if (t && c) {
+            history.push({ t: t, c: parseInt(c, 10) });
+          }
+        }
+      } else {
+        for (let i = 0; i < hParam.length; i++) {
+          const t = decompressMap[hParam[i]];
+          if (t) {
+            if (history.length > 0 && history[history.length - 1].t === t) {
+              history[history.length - 1].c++;
+            } else {
+              history.push({ t: t, c: 1 });
+            }
+          }
         }
       }
     }
