@@ -38,8 +38,10 @@
 
 <div class="b-container">
   <button onclick="onClearHistory()" class="b-dark" style="width: 50px;">履歴<br>全消去</button>
-  <button onclick="apply('all_star')" class="b-yellow" style="width: 50px;">オール<br>スター</button>
-  <div style="width: 150px;"></div>
+  <div style="width: 250px; text-align: center; font-size: 14px; font-weight: bold; line-height: 50px; background: #fff; border: 1px solid #999; border-radius: 4px;">
+    無名: <span id="mumei-pt" style="color: #e74c3c;">0</span>pt &nbsp;|&nbsp; 
+    生駒: <span id="ikoma-pt" style="color: #2ecc71;">0</span>pt
+  </div>
 </div>
 
 <div class="b-container">
@@ -129,15 +131,39 @@
     "end_high": "b-yellow"
   };
 
+  let currentMumeiPts = 0;
+  let currentIkomaPts = 0;
+
   function calcHistory() {
     sr = Array.from({ length: S }, () => BigNumber(1));
-    
-    // TODO: ポイントの蓄積や単独フラグの確率計算ロジックを実装する
+    currentMumeiPts = 0;
+    currentIkomaPts = 0;
     
     history.forEach(item => {
       const h = item.t;
-      // 例: 単独設定差の適用イメージ
-      // if (h === 'end_default') applyIndependentRates([0.5, 0.5, 0.4, 0.4, 0.3, 0.3]);
+      const c = item.c;
+      item.ptsStr = "";
+
+      if (h === 'mumei_off' || h === 'mumei_on') currentMumeiPts += 1 * c;
+      else if (h === 'mumei_lit' || h === 'mumei_high' || h === 'combo_mumei') currentMumeiPts += 15 * c;
+      else if (h === 'combo_mumei_high') currentMumeiPts += 30 * c;
+
+      else if (h === 'ikoma_off' || h === 'ikoma_on') currentIkomaPts += 1 * c;
+      else if (h === 'ikoma_lit' || h === 'ikoma_high' || h === 'combo_ikoma') currentIkomaPts += 15 * c;
+      else if (h === 'combo_ikoma_high') currentIkomaPts += 30 * c;
+
+      else if (h === 'cz_mumei' || h === 'cz_mumei_douai') {
+        item.ptsStr = ` (${currentMumeiPts}pt)`;
+        currentMumeiPts = 0;
+      }
+      else if (h === 'cz_ikoma' || h === 'cz_ikoma_douai') {
+        item.ptsStr = ` (${currentIkomaPts}pt)`;
+        currentIkomaPts = 0;
+      }
+      else if (h === 'yuri_cut') {
+        currentMumeiPts = 0;
+        currentIkomaPts = 0;
+      }
     });
 
     updateUI();
@@ -164,12 +190,15 @@
       document.getElementById("r" + s).textContent = p + "%";
     }
 
+    document.getElementById("mumei-pt").textContent = currentMumeiPts;
+    document.getElementById("ikoma-pt").textContent = currentIkomaPts;
+
     const histDiv = document.getElementById("history");
     let hHtml = "";
     for (let i = history.length - 1; i >= 0; i--) {
       const item = history[i];
       const dLabel = displayMap[item.t] || item.t;
-      const label = item.c > 1 ? `${dLabel} x ${item.c}` : dLabel;
+      const label = (item.c > 1 ? `${dLabel} x ${item.c}` : dLabel) + (item.ptsStr || "");
       const col = colorMap[item.t] || "b-gray";
       
       hHtml += `<div class="history-item ${col}">`;
