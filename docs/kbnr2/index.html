@@ -285,7 +285,7 @@
       history.forEach(item => {
         const char = compressMap[item.t];
         if (char) {
-          for (let i = 0; i < item.c; i++) hStr += char;
+          hStr += (item.c > 1) ? (char + item.c) : char;
         }
       });
       params.set('h', hStr);
@@ -350,23 +350,22 @@
     }
     const hParam = params.get('h');
     if (hParam) {
-      if (hParam.includes(':')) {
-        const items = hParam.split(',');
-        for (const item of items) {
-          const [t, c] = item.split(':');
-          if (t && c) {
-            history.push({ t: t, c: parseInt(c, 10) });
+      let i = 0;
+      while (i < hParam.length) {
+        const t = decompressMap[hParam[i]];
+        i++;
+        if (t) {
+          let numStr = "";
+          while (i < hParam.length && hParam[i] >= '0' && hParam[i] <= '9') {
+            numStr += hParam[i];
+            i++;
           }
-        }
-      } else {
-        for (let i = 0; i < hParam.length; i++) {
-          const t = decompressMap[hParam[i]];
-          if (t) {
-            if (history.length > 0 && history[history.length - 1].t === t) {
-              history[history.length - 1].c++;
-            } else {
-              history.push({ t: t, c: 1 });
-            }
+          const c = numStr ? parseInt(numStr, 10) : 1;
+          
+          if (history.length > 0 && history[history.length - 1].t === t) {
+            history[history.length - 1].c += c;
+          } else {
+            history.push({ t: t, c: c });
           }
         }
       }
