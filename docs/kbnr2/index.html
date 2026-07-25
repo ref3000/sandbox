@@ -75,6 +75,10 @@
     <button onclick="apply('cz_allstar_douai')" class="b-blue">ｵｰﾙｽﾀｰ<br>銅藍当選</button>
     <button onclick="apply('yuri_cut')" class="b-gray">有利切れ</button>
   </div>
+  <div style="display:flex; justify-content: space-around; margin: 4px 10px 8px; font-size: 11px; font-weight: bold; color: #555;">
+    <div id="mumei_lit_rate">無名発光: -</div>
+    <div id="ikoma_lit_rate">生駒発光: -</div>
+  </div>
 </details>
 
 <details open>
@@ -189,11 +193,19 @@
     currentMumeiPts = 0;
     currentIkomaPts = 0;
     let bellK = 0;
+    let mumeiOffCount = 0, mumeiLitCount = 0;
+    let ikomaOffCount = 0, ikomaLitCount = 0;
     
     history.forEach(item => {
       const h = item.t;
       const c = item.c;
       item.ptsStr = "";
+
+      if (h === 'low_bell') bellK += c;
+      if (h === 'mumei_off') mumeiOffCount += c;
+      if (h === 'mumei_lit') mumeiLitCount += c;
+      if (h === 'ikoma_off') ikomaOffCount += c;
+      if (h === 'ikoma_lit') ikomaLitCount += c;
 
       if (h === 'mumei_off' || h === 'mumei_on') currentMumeiPts += 1 * c;
       else if (h === 'mumei_lit' || h === 'mumei_high' || h === 'combo_mumei') currentMumeiPts += 15 * c;
@@ -226,6 +238,29 @@
         else currentIkomaPts = 0;
       }
       else if (h === 'yuri_cut' || h === 'cz_allstar_douai') {
+        const getNonWinRates = (pts) => {
+          const pdfs = [
+            [0.005, 0.005, 0.010, 0.010, 0.010, 0.010],
+            [0.010, 0.010, 0.015, 0.020, 0.025, 0.030],
+            [0.040, 0.050, 0.060, 0.080, 0.090, 0.100],
+            [0.060, 0.070, 0.080, 0.090, 0.095, 0.100],
+            [0.100, 0.120, 0.140, 0.160, 0.180, 0.200],
+            [0.160, 0.180, 0.200, 0.220, 0.240, 0.250],
+            [0.210, 0.210, 0.210, 0.200, 0.200, 0.200],
+            [0.180, 0.160, 0.140, 0.120, 0.090, 0.070],
+            [0.140, 0.120, 0.095, 0.070, 0.050, 0.030]
+          ];
+          let cdf = [0, 0, 0, 0, 0, 0];
+          for (let i = 0; i < pdfs.length; i++) {
+            if (pts >= (i + 1) * 15) {
+              for (let s = 0; s < 6; s++) cdf[s] += pdfs[i][s];
+            }
+          }
+          return cdf.map(v => Math.max(0.001, 1 - v));
+        };
+        if (currentMumeiPts >= 15) applyIndependentRates(getNonWinRates(currentMumeiPts), 1);
+        if (currentIkomaPts >= 15) applyIndependentRates(getNonWinRates(currentIkomaPts), 1);
+        
         currentMumeiPts = 0;
         currentIkomaPts = 0;
       }
@@ -273,6 +308,19 @@
 
     const bellCountDiv = document.getElementById("bell_count");
     if (bellCountDiv) bellCountDiv.textContent = bellK;
+
+    const mLitDiv = document.getElementById("mumei_lit_rate");
+    if (mLitDiv) {
+      const tot = mumeiOffCount + mumeiLitCount;
+      if (tot > 0) mLitDiv.textContent = `無名発光: ${mumeiLitCount}/${tot} (${(mumeiLitCount/tot*100).toFixed(1)}%)`;
+      else mLitDiv.textContent = `無名発光: -`;
+    }
+    const iLitDiv = document.getElementById("ikoma_lit_rate");
+    if (iLitDiv) {
+      const tot = ikomaOffCount + ikomaLitCount;
+      if (tot > 0) iLitDiv.textContent = `生駒発光: ${ikomaLitCount}/${tot} (${(ikomaLitCount/tot*100).toFixed(1)}%)`;
+      else iLitDiv.textContent = `生駒発光: -`;
+    }
 
     updateURL();
     updateUI();
