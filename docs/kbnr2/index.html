@@ -45,66 +45,77 @@
   <button onclick="document.getElementById('infoModal').style.display='block'" class="b-gray">確率<br>確認</button>
 </div>
 
-<div class="b-container">
-  <button onclick="apply('mumei_off')" class="b-red">無名<br>発光なし</button>
-  <button onclick="apply('mumei_on')" class="b-red">無名<br>発光中</button>
-  <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
-  <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
-  <button onclick="apply('combo_mumei')" class="b-red">複合無名</button>
-  <button onclick="apply('combo_mumei_high')" class="b-red">複合無名<br>高確帯</button>
-</div>
+<details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【CZ関連】</summary>
+  <div class="b-container">
+    <button onclick="apply('cz_mumei')" class="b-red">無名CZ<br>当選</button>
+    <button onclick="apply('cz_mumei_douai')" class="b-red">無名CZ<br>銅藍当選</button>
+    <button onclick="apply('cz_ikoma')" class="b-green">生駒CZ<br>当選</button>
+    <button onclick="apply('cz_ikoma_douai')" class="b-green">生駒CZ<br>銅藍当選</button>
+    <button onclick="apply('cz_allstar_douai')" class="b-blue">ｵｰﾙｽﾀｰ<br>銅藍当選</button>
+    <button onclick="apply('yuri_cut')" class="b-gray">有利切れ</button>
+  </div>
+</details>
 
-<div class="b-container">
-  <button onclick="apply('ikoma_off')" class="b-green">生駒<br>発光なし</button>
-  <button onclick="apply('ikoma_on')" class="b-green">生駒<br>発光中</button>
-  <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
-  <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
-  <button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button>
-  <button onclick="apply('combo_ikoma_high')" class="b-green">複合生駒<br>高確帯</button>
-</div>
+<details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【チャンス目】</summary>
+  <div class="b-container">
+    <button onclick="apply('mumei_off')" class="b-red">無名<br>発光なし</button>
+    <button onclick="apply('mumei_on')" class="b-red">無名<br>発光中</button>
+    <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
+    <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
+    <button onclick="apply('combo_mumei')" class="b-red">複合無名</button>
+    <button onclick="apply('combo_mumei_high')" class="b-red">複合無名<br>高確帯</button>
+  </div>
+  <div class="b-container">
+    <button onclick="apply('ikoma_off')" class="b-green">生駒<br>発光なし</button>
+    <button onclick="apply('ikoma_on')" class="b-green">生駒<br>発光中</button>
+    <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
+    <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
+    <button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button>
+    <button onclick="apply('combo_ikoma_high')" class="b-green">複合生駒<br>高確帯</button>
+  </div>
+</details>
 
-<div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【CZ関連】</div>
-<div class="b-container">
-  <button onclick="apply('cz_mumei')" class="b-red">無名CZ<br>当選</button>
-  <button onclick="apply('cz_mumei_douai')" class="b-red">無名CZ<br>銅藍当選</button>
-  <button onclick="apply('cz_ikoma')" class="b-green">生駒CZ<br>当選</button>
-  <button onclick="apply('cz_ikoma_douai')" class="b-green">生駒CZ<br>銅藍当選</button>
-  <button onclick="apply('cz_allstar_douai')" class="b-blue">ｵｰﾙｽﾀｰ<br>銅藍当選</button>
-  <button onclick="apply('yuri_cut')" class="b-gray">有利切れ</button>
-</div>
+<details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【AT中ボイス】</summary>
+  <div class="b-container">
+    <button onclick="apply('voice_f')" class="b-red">女性</button>
+    <button onclick="apply('voice_m')" class="b-blue">男性</button>
+    <button onclick="apply('voice_mumei_shukon')" class="b-red">無名<br>ｼｭｺﾝ</button>
+    <button onclick="apply('voice_ayame')" class="b-yellow">菖蒲<br>饅頭</button>
+    <button onclick="apply('voice_ikoma')" class="b-green">生駒<br>誇り</button>
+    <button onclick="apply('voice_kurusu')" class="b-purple">来栖<br>あの世</button>
+  </div>
+  <div class="b-container">
+    <button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故</button>
+    <button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人か</button>
+    <button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>最後</button>
+    <button onclick="apply('voice_mumei_futsu')" class="b-red">この台に</button>
+    <button onclick="apply('voice_none')" class="b-gray">ボイス<br>なし</button>
+    <div style="flex: 1 1 20%; margin: 2px;"></div>
+  </div>
+</details>
 
-<div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【AT中ボイス】</div>
-<div class="b-container">
-  <button onclick="apply('voice_f')" class="b-red">女性</button>
-  <button onclick="apply('voice_m')" class="b-blue">男性</button>
-  <button onclick="apply('voice_none')" class="b-gray">ボイス<br>なし</button>
-  <button onclick="apply('voice_mumei_shukon')" class="b-red">無名<br>ｼｭｺﾝ</button>
-  <button onclick="apply('voice_ayame')" class="b-yellow">菖蒲<br>饅頭</button>
-  <button onclick="apply('voice_ikoma')" class="b-green">生駒<br>誇り</button>
-</div>
-<div class="b-container">
-  <button onclick="apply('voice_kurusu')" class="b-purple">来栖<br>あの世</button>
-  <button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故</button>
-  <button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人か</button>
-  <button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>最後</button>
-  <button onclick="apply('voice_mumei_futsu')" class="b-red">無名<br>普通</button>
-  <div style="width: 50px;"></div>
-</div>
+<details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【キャラ紹介・ST終了画面等】</summary>
+  <div class="b-container">
+    <button onclick="apply('char_f')" class="b-red">キャラ<br>女性</button>
+    <button onclick="apply('char_m')" class="b-blue">キャラ<br>男性</button>
+    <button onclick="apply('char_biba')" class="b-purple">キャラ<br>美馬</button>
+    <button onclick="apply('st_default')" class="b-gray">ST画面<br>デフォ</button>
+    <button onclick="apply('st_shugo')" class="b-yellow">ST画面<br>集合</button>
+    <button onclick="apply('st_mizugi')" class="b-blue">ST画面<br>水着</button>
+  </div>
+</details>
 
-<div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【キャラ紹介・ST終了画面等】</div>
-<div class="b-container">
-  <button onclick="apply('char_f')" class="b-red">キャラ<br>女性</button>
-  <button onclick="apply('char_m')" class="b-blue">キャラ<br>男性</button>
-  <button onclick="apply('char_biba')" class="b-purple">キャラ<br>美馬</button>
-  <button onclick="apply('st_default')" class="b-gray">ST画面<br>デフォ</button>
-  <button onclick="apply('st_shugo')" class="b-yellow">ST画面<br>集合</button>
-  <button onclick="apply('st_mizugi')" class="b-blue">ST画面<br>水着</button>
-</div>
-<div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【下段ベル】</div>
-<div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px;">
-  <input type="number" id="bell_g" placeholder="G数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
-  <button onclick="apply('low_bell')" class="b-yellow">下段ベル<br>(履歴追加)</button>
-</div>
+<details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【下段ベル】</summary>
+  <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px;">
+    <input type="number" id="bell_g" placeholder="G数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
+    <button onclick="apply('low_bell')" class="b-yellow">下段ベル<br>(履歴追加)</button>
+  </div>
+</details>
 
 <div id="history"></div>
 
@@ -130,7 +141,7 @@
     "voice_f": "ボイス 女性", "voice_m": "ボイス 男性", "voice_none": "ボイス なし",
     "voice_mumei_shukon": "ボイス 無名ｼｭｺﾝ", "voice_ayame": "ボイス 菖蒲おまんじゅう", "voice_ikoma": "ボイス 生駒俺の誇れる",
     "voice_kurusu": "ボイス 来栖あの世で", "voice_kage_naze": "ボイス 景行何故", "voice_kage_hito": "ボイス 景行人か",
-    "voice_kage_kotoshi": "ボイス 景行最後", "voice_mumei_futsu": "ボイス 無名普通じゃない",
+    "voice_kage_kotoshi": "ボイス 景行最後", "voice_mumei_futsu": "ボイス この台に",
     "char_f": "キャラ 女性", "char_m": "キャラ 男性", "char_biba": "キャラ 美馬",
     "st_default": "ST画面 デフォルト", "st_shugo": "ST画面 メンバー集合", "st_mizugi": "ST画面 水着",
     "low_bell": "下段ベル"
@@ -326,7 +337,7 @@
       <tr><td>景行(何故)</td><td>15.0%</td><td>15.5%</td><td>16.0%</td><td>16.5%</td><td>17.0%</td><td>17.5%</td></tr>
       <tr><td>景行(人か)</td><td>1.0%</td><td>1.2%</td><td>1.4%</td><td>1.6%</td><td>1.8%</td><td>2.0%</td></tr>
       <tr><td>景行(最後)</td><td>0.4%</td><td>0.5%</td><td>0.7%</td><td>1.0%</td><td>1.3%</td><td>1.6%</td></tr>
-      <tr><td>無名(普通)</td><td>0%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td></tr>
+      <tr><td>この台に</td><td>0%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td><td>0.5%</td></tr>
       <tr><td>ボイスなし</td><td>0%</td><td>0%</td><td>0%</td><td>0%</td><td>0.39%</td><td>0.39%</td></tr>
     </table>
 
