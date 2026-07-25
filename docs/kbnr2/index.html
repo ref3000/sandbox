@@ -78,6 +78,19 @@
 </details>
 
 <details open>
+  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【下段ベル】</summary>
+  <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px; align-items: center;">
+    <button onclick="apply('low_bell')" class="b-yellow">下段ベル</button>
+    <div style="font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+      <span id="bell_count">0</span>
+      <span style="color:#777;">/</span>
+      <input type="number" id="bell_g" placeholder="G数" style="width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
+      <span id="bell_prob" style="color: #555; margin-left: 4px;"></span>
+    </div>
+  </div>
+</details>
+
+<details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【AT中ボイス】</summary>
   <div class="b-container">
     <button onclick="apply('voice_f')" class="b-red">女性</button>
@@ -109,18 +122,6 @@
   </div>
 </details>
 
-<details open>
-  <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【下段ベル】</summary>
-  <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px; align-items: center;">
-    <button onclick="apply('low_bell')" class="b-yellow">下段ベル</button>
-    <div style="font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
-      <span id="bell_count">0</span>
-      <span style="color:#777;">/</span>
-      <input type="number" id="bell_g" placeholder="G数" style="width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
-      <span id="bell_prob" style="color: #555; margin-left: 4px;"></span>
-    </div>
-  </div>
-</details>
 
 <div id="history"></div>
 
@@ -262,7 +263,24 @@
     const bellCountDiv = document.getElementById("bell_count");
     if (bellCountDiv) bellCountDiv.textContent = bellK;
 
+    updateURL();
     updateUI();
+  }
+
+  function updateURL() {
+    const params = new URLSearchParams();
+    if (history.length > 0) {
+      const hStr = history.map(item => `${item.t}:${item.c}`).join(',');
+      params.set('h', hStr);
+    }
+    const bellGInput = document.getElementById("bell_g").value;
+    if (bellGInput) {
+      params.set('g', bellGInput);
+    }
+    let url = window.location.pathname;
+    const q = params.toString();
+    if (q) url += '?' + q;
+    window.history.replaceState(null, '', url);
   }
 
   function pushHistory(t) {
@@ -307,7 +325,26 @@
     histDiv.innerHTML = hHtml;
   }
 
-  updateUI();
+  function initFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const gParam = params.get('g');
+    if (gParam) {
+      document.getElementById("bell_g").value = gParam;
+    }
+    const hParam = params.get('h');
+    if (hParam) {
+      const items = hParam.split(',');
+      for (const item of items) {
+        const [t, c] = item.split(':');
+        if (t && c) {
+          history.push({ t: t, c: parseInt(c, 10) });
+        }
+      }
+    }
+    calcHistory();
+  }
+
+  initFromURL();
 </script>
 
 <!-- 解析情報モーダル -->
