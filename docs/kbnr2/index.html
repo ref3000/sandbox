@@ -116,15 +116,10 @@
   <button onclick="apply('st_shugo')" class="b-yellow">ST画面<br>集合</button>
   <button onclick="apply('st_mizugi')" class="b-blue">ST画面<br>水着</button>
 </div>
-<div class="b-container">
-  <button onclick="apply('end_default')" class="b-gray" style="width: 150px;">AT終了画面<br>デフォルト</button>
-  <button onclick="apply('end_high')" class="b-yellow" style="width: 150px;">AT終了画面<br>高設定示唆</button>
-</div>
-
 <div style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555;">【下段ベル】</div>
 <div class="b-container" style="justify-content: flex-start; gap: 8px; margin-bottom: 10px;">
   <input type="number" id="bell_g" placeholder="G数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
-  <input type="number" id="bell_c" placeholder="ベル回数" style="width: 100px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" onchange="calcHistory()">
+  <button onclick="apply('low_bell')" class="b-yellow" style="width: 100px; font-size: 12px;">下段ベル<br>(履歴追加)</button>
 </div>
 
 <div id="history"></div>
@@ -152,7 +147,7 @@
     "voice_kage_kotoshi": "ボイス 景行最後", "voice_mumei_futsu": "ボイス 無名普通じゃない",
     "char_f": "キャラ 女性", "char_m": "キャラ 男性", "char_biba": "キャラ 美馬",
     "st_default": "ST画面 デフォルト", "st_shugo": "ST画面 メンバー集合", "st_mizugi": "ST画面 水着",
-    "end_default": "終了画面(デフォルト)", "end_high": "終了画面(高設定示唆)"
+    "low_bell": "下段ベル"
   };
 
   const colorMap = {
@@ -171,7 +166,7 @@
     "voice_kage_kotoshi": "b-dark", "voice_mumei_futsu": "b-red",
     "char_f": "b-red", "char_m": "b-blue", "char_biba": "b-purple",
     "st_default": "b-gray", "st_shugo": "b-yellow", "st_mizugi": "b-blue",
-    "end_default": "b-gray", "end_high": "b-yellow"
+    "low_bell": "b-yellow"
   };
 
   let currentMumeiPts = 0;
