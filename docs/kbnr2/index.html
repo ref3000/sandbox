@@ -173,13 +173,27 @@
       else if (h === 'ikoma_lit' || h === 'ikoma_high' || h === 'combo_ikoma') currentIkomaPts += 15 * c;
       else if (h === 'combo_ikoma_high') currentIkomaPts += 30 * c;
 
-      else if (h === 'cz_mumei' || h === 'cz_mumei_douai') {
-        item.ptsStr = ` (${currentMumeiPts}pt)`;
-        currentMumeiPts = 0;
-      }
-      else if (h === 'cz_ikoma' || h === 'cz_ikoma_douai') {
-        item.ptsStr = ` (${currentIkomaPts}pt)`;
-        currentIkomaPts = 0;
+      else if (h === 'cz_mumei' || h === 'cz_mumei_douai' || h === 'cz_ikoma' || h === 'cz_ikoma_douai') {
+        const pts = h.includes('mumei') ? currentMumeiPts : currentIkomaPts;
+        item.ptsStr = ` (${pts}pt)`;
+
+        if (pts > 0) {
+          let pRates = [1, 1, 1, 1, 1, 1];
+          if (pts <= 15) pRates = [0.005, 0.005, 0.010, 0.010, 0.010, 0.010];
+          else if (pts <= 30) pRates = [0.010, 0.010, 0.015, 0.020, 0.025, 0.030];
+          else if (pts <= 45) pRates = [0.040, 0.050, 0.060, 0.080, 0.090, 0.100];
+          else if (pts <= 60) pRates = [0.060, 0.070, 0.080, 0.090, 0.095, 0.100];
+          else if (pts <= 75) pRates = [0.100, 0.120, 0.140, 0.160, 0.180, 0.200];
+          else if (pts <= 90) pRates = [0.160, 0.180, 0.200, 0.220, 0.240, 0.250];
+          else if (pts <= 105) pRates = [0.210, 0.210, 0.210, 0.200, 0.200, 0.200];
+          else if (pts <= 120) pRates = [0.180, 0.160, 0.140, 0.120, 0.090, 0.070];
+          else if (pts <= 135) pRates = [0.140, 0.120, 0.095, 0.070, 0.050, 0.030];
+          else pRates = [0.095, 0.075, 0.050, 0.030, 0.020, 0.010];
+          applyIndependentRates(pRates, c);
+        }
+
+        if (h.includes('mumei')) currentMumeiPts = 0;
+        else currentIkomaPts = 0;
       }
       else if (h === 'yuri_cut' || h === 'cz_allstar_douai') {
         currentMumeiPts = 0;
