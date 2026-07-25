@@ -285,7 +285,6 @@
       else if (h === 'voice_kage_hito') applyIndependentRates([0.010, 0.012, 0.014, 0.016, 0.018, 0.020], c);
       else if (h === 'voice_kage_kotoshi') applyIndependentRates([0.004, 0.005, 0.007, 0.010, 0.013, 0.0156], c);
       else if (h === 'voice_mumei_futsu') applyIndependentRates([0, 0.005, 0.005, 0.005, 0.005, 0.005], c);
-      else if (h === 'low_bell') bellK += c;
     });
 
     const bellProbs = [1/121.1, 1/114.4, 1/112.8, 1/106.2, 1/104.2, 1/99.1];
@@ -295,7 +294,8 @@
       const validN = Math.max(bellN, bellK);
       for (let s = 0; s < S; s++) {
         const p = bellProbs[s];
-        sr[s] = sr[s].times(BigNumber(p).pow(bellK)).times(BigNumber(1 - p).pow(validN - bellK));
+        const failPow = BigNumber(Math.pow(1 - p, validN - bellK));
+        sr[s] = sr[s].times(BigNumber(p).pow(bellK)).times(failPow);
       }
       const bellProbDiv = document.getElementById("bell_prob");
       if (bellProbDiv) {
