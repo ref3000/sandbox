@@ -191,6 +191,17 @@
       else if (h === 'st_default') applyIndependentRates([0.9880, 0.9820, 0.9820, 0.9540, 0.9470, 1 - 0.0610 - (1/256)], c);
       else if (h === 'st_shugo') applyIndependentRates([0.0120, 0.0180, 0.0180, 0.0460, 0.0530, 0.0610], c);
       else if (h === 'st_mizugi') applyIndependentRates([0, 0, 0, 0, 0, 1/256], c);
+      else if (h === 'voice_f') applyIndependentRates([0.4000, 0.42955, 0.3447, 0.4125, 0.32854, 0.39297], c);
+      else if (h === 'voice_m') applyIndependentRates([0.4000, 0.35145, 0.4213, 0.3375, 0.40155, 0.32152], c);
+      else if (h === 'voice_none') applyIndependentRates([0, 0, 0, 0, 1/256, 1/256], c);
+      else if (h === 'voice_mumei_shukon') applyIndependentRates([0.006, 0.014, 0.008, 0.018, 0.010, 0.022], c);
+      else if (h === 'voice_ayame') applyIndependentRates([0.006, 0.014, 0.008, 0.018, 0.010, 0.022], c);
+      else if (h === 'voice_ikoma') applyIndependentRates([0.012, 0.007, 0.016, 0.009, 0.020, 0.011], c);
+      else if (h === 'voice_kurusu') applyIndependentRates([0.012, 0.007, 0.016, 0.009, 0.020, 0.011], c);
+      else if (h === 'voice_kage_naze') applyIndependentRates([0.150, 0.155, 0.160, 0.165, 0.170, 0.175], c);
+      else if (h === 'voice_kage_hito') applyIndependentRates([0.010, 0.012, 0.014, 0.016, 0.018, 0.020], c);
+      else if (h === 'voice_kage_kotoshi') applyIndependentRates([0.004, 0.005, 0.007, 0.010, 0.013, 0.0156], c);
+      else if (h === 'voice_mumei_futsu') applyIndependentRates([0, 0.005, 0.005, 0.005, 0.005, 0.005], c);
       else if (h === 'low_bell') bellK += c;
     });
 
