@@ -42,7 +42,7 @@
   <button onclick="onReset('reset')" class="b-dark">設定変更</button>
   <button onclick="onReset('at_end')" class="b-dark">AT終了</button>
   <button onclick="onTenpaEnd()" class="b-yellow">天破終了</button>
-  <div style="width: 50px;"></div>
+  <button onclick="document.getElementById('infoModal').style.display='block'" class="b-gray" style="font-size: 8px;">内部確率<br>解析情報</button>
   <button onclick="onClearHistory()" class="b-red">履歴<br>全消去</button>
 </div>
 
@@ -408,5 +408,45 @@
     } else { onReset('reset'); }
   };
 </script>
+
+<!-- 解析情報モーダル -->
+<div id="infoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; overflow-y:auto;">
+  <div style="background:#fff; margin: 5% auto; padding: 20px; width: 95%; max-width: 600px; border-radius: 8px; box-sizing: border-box;">
+    <span onclick="document.getElementById('infoModal').style.display='none'" style="float:right; cursor:pointer; font-size:24px; font-weight:bold; color:#333;">&times;</span>
+    <h2 style="margin-top:0; font-size:18px;">内部確率・解析情報</h2>
+    <style>
+      .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px; }
+      .info-table th, .info-table td { border: 1px solid #ccc; padding: 4px; text-align: center; }
+      .info-table th { background: #eee; }
+      .info-modal-h3 { font-size: 14px; margin-bottom: 5px; color: #444; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+    </style>
+    
+    <h3 class="info-modal-h3">1. チャンス目・勝舞揃い 天破当選率</h3>
+    <table class="info-table">
+      <tr><th>状態</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+      <tr><td>低確</td><td>2.0%</td><td>2.7%</td><td>3.1%</td><td>3.9%</td><td>4.7%</td><td>6.3%</td></tr>
+      <tr><td>通常</td><td>10.2%</td><td>10.5%</td><td>10.9%</td><td>12.5%</td><td>15.6%</td><td>18.8%</td></tr>
+      <tr><td>高確</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td></tr>
+    </table>
+
+    <h3 class="info-modal-h3">2. 弱チェ・スイカ 天破当選率</h3>
+    <table class="info-table">
+      <tr><th>状態</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+      <tr><td>低・通常</td><td>0.8%</td><td>0.8%</td><td>1.6%</td><td>2.3%</td><td>3.5%</td><td>4.7%</td></tr>
+      <tr><td>高確</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td></tr>
+    </table>
+
+    <h3 class="info-modal-h3">3. スイカ 状態移行率（低確滞在時）</h3>
+    <table class="info-table">
+      <tr><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+      <tr><td>低確へ</td><td>32.8%</td><td>32.8%</td><td>32.4%</td><td>26.6%</td><td>17.2%</td><td>10.9%</td></tr>
+      <tr><td>通常へ</td><td>65.6%</td><td>65.6%</td><td>65.6%</td><td>70.3%</td><td>76.6%</td><td>81.3%</td></tr>
+      <tr><td>高確へ</td><td>1.6%</td><td>1.6%</td><td>2.0%</td><td>3.1%</td><td>6.3%</td><td>7.8%</td></tr>
+    </table>
+
+    <button onclick="document.getElementById('infoModal').style.display='none'" class="b-gray" style="width: 100%; padding: 10px; margin-top: 10px; cursor: pointer;">閉じる</button>
+  </div>
+</div>
+
 </body>
 </html>
