@@ -55,20 +55,20 @@
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【CZ関連】</summary>
   <div class="b-container">
-    <button onclick="apply('mumei_off')" class="b-red-light">無名<br>発光なし</button>
-    <button onclick="apply('mumei_on')" class="b-red-light">無名<br>発光中</button>
-    <button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button>
-    <button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button>
-    <button onclick="apply('combo_mumei')" class="b-red">複合無名</button>
-    <button onclick="apply('combo_mumei_high')" class="b-red-dark">複合無名<br>高確帯</button>
+    <div class="btn-wrap"><button onclick="apply('mumei_off')" class="b-red-light">無名<br>発光なし</button><div class="btn-cnt" id="cnt_mumei_off"></div></div>
+    <div class="btn-wrap"><button onclick="apply('mumei_on')" class="b-red-light">無名<br>発光中</button><div class="btn-cnt" id="cnt_mumei_on"></div></div>
+    <div class="btn-wrap"><button onclick="apply('mumei_lit')" class="b-red">無名<br>発光</button><div class="btn-cnt" id="cnt_mumei_lit"></div></div>
+    <div class="btn-wrap"><button onclick="apply('mumei_high')" class="b-red">無名<br>高確帯</button><div class="btn-cnt" id="cnt_mumei_high"></div></div>
+    <div class="btn-wrap"><button onclick="apply('combo_mumei')" class="b-red">複合無名</button><div class="btn-cnt" id="cnt_combo_mumei"></div></div>
+    <div class="btn-wrap"><button onclick="apply('combo_mumei_high')" class="b-red-dark">複合無名<br>高確帯</button><div class="btn-cnt" id="cnt_combo_mumei_high"></div></div>
   </div>
   <div class="b-container">
-    <button onclick="apply('ikoma_off')" class="b-green-light">生駒<br>発光なし</button>
-    <button onclick="apply('ikoma_on')" class="b-green-light">生駒<br>発光中</button>
-    <button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button>
-    <button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button>
-    <button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button>
-    <button onclick="apply('combo_ikoma_high')" class="b-green-dark">複合生駒<br>高確帯</button>
+    <div class="btn-wrap"><button onclick="apply('ikoma_off')" class="b-green-light">生駒<br>発光なし</button><div class="btn-cnt" id="cnt_ikoma_off"></div></div>
+    <div class="btn-wrap"><button onclick="apply('ikoma_on')" class="b-green-light">生駒<br>発光中</button><div class="btn-cnt" id="cnt_ikoma_on"></div></div>
+    <div class="btn-wrap"><button onclick="apply('ikoma_lit')" class="b-green">生駒<br>発光</button><div class="btn-cnt" id="cnt_ikoma_lit"></div></div>
+    <div class="btn-wrap"><button onclick="apply('ikoma_high')" class="b-green">生駒<br>高確帯</button><div class="btn-cnt" id="cnt_ikoma_high"></div></div>
+    <div class="btn-wrap"><button onclick="apply('combo_ikoma')" class="b-green">複合生駒</button><div class="btn-cnt" id="cnt_combo_ikoma"></div></div>
+    <div class="btn-wrap"><button onclick="apply('combo_ikoma_high')" class="b-green-dark">複合生駒<br>高確帯</button><div class="btn-cnt" id="cnt_combo_ikoma_high"></div></div>
   </div>
   <div class="b-container">
     <button onclick="apply('cz_mumei')" class="b-red">無名CZ<br>当選</button>
@@ -190,11 +190,15 @@
 
   let currentMumeiPts = 0;
   let currentIkomaPts = 0;
+  let currentMumeiCounts = {};
+  let currentIkomaCounts = {};
 
   function calcHistory() {
     sr = Array.from({ length: S }, () => BigNumber(1));
     currentMumeiPts = 0;
     currentIkomaPts = 0;
+    currentMumeiCounts = {};
+    currentIkomaCounts = {};
     let bellK = 0;
     let mumeiOffCount = 0, mumeiLitCount = 0;
     let ikomaOffCount = 0, ikomaLitCount = 0;
@@ -203,6 +207,9 @@
       const h = item.t;
       const c = item.c;
       item.ptsStr = "";
+
+      if (h.startsWith('mumei_') || h.startsWith('combo_mumei')) currentMumeiCounts[h] = (currentMumeiCounts[h] || 0) + c;
+      if (h.startsWith('ikoma_') || h.startsWith('combo_ikoma')) currentIkomaCounts[h] = (currentIkomaCounts[h] || 0) + c;
 
       if (h === 'low_bell') bellK += c;
       if (h === 'mumei_off') mumeiOffCount += c;
@@ -237,8 +244,8 @@
           applyIndependentRates(pRates, c);
         }
 
-        if (h.includes('mumei')) currentMumeiPts = 0;
-        else currentIkomaPts = 0;
+        if (h.includes('mumei')) { currentMumeiPts = 0; currentMumeiCounts = {}; }
+        else { currentIkomaPts = 0; currentIkomaCounts = {}; }
       }
       else if (h === 'yuri_cut' || h === 'cz_allstar_douai') {
         const getNonWinRates = (pts) => {
@@ -270,6 +277,8 @@
         
         currentMumeiPts = 0;
         currentIkomaPts = 0;
+        currentMumeiCounts = {};
+        currentIkomaCounts = {};
       }
       else if (h === 'char_f') applyIndependentRates([0.5000, 0.5750, 0.4150, 0.5850, 0.3990, 0.6000], c);
       else if (h === 'char_m') applyIndependentRates([0.5000, 0.4250, 0.5850, 0.4140, 0.6000, 0.3985], c);
@@ -377,6 +386,14 @@
   function updateUI() {
     let counts = {};
     history.forEach(item => { counts[item.t] = (counts[item.t] || 0) + item.c; });
+    
+    const czKeys = [
+      'mumei_off', 'mumei_on', 'mumei_lit', 'mumei_high', 'combo_mumei', 'combo_mumei_high',
+      'ikoma_off', 'ikoma_on', 'ikoma_lit', 'ikoma_high', 'combo_ikoma', 'combo_ikoma_high'
+    ];
+    for (let k of czKeys) {
+      counts[k] = (currentMumeiCounts[k] || 0) + (currentIkomaCounts[k] || 0);
+    }
     for (let k in compressMap) {
       const cntDiv = document.getElementById("cnt_" + k);
       if (cntDiv) {
