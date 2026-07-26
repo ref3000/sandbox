@@ -419,79 +419,88 @@
       .info-table th, .info-table td { border: 1px solid #ccc; padding: 4px; text-align: center; }
       .info-table th { background: #eee; }
       .info-modal-h3 { font-size: 14px; margin-bottom: 5px; color: #444; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+      .pct { font-size: 0.6em; }
     </style>
     
     <h3 class="info-modal-h3">1. 状態移行抽選</h3>
     <h4 style="font-size:12px; margin: 4px 0;">【低確滞在時】</h4>
     <table class="info-table">
       <tr><th>契機</th><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td rowspan="2">弱チェ</td><td>通常へ</td><td>46.1%</td><td>46.1%</td><td>46.9%</td><td>50.0%</td><td>59.4%</td><td>62.5%</td></tr>
-      <tr><td>高確へ</td><td>0.8%</td><td>0.8%</td><td>1.2%</td><td>1.6%</td><td>3.1%</td><td>4.7%</td></tr>
-      <tr><td rowspan="2">スイカ</td><td>通常へ</td><td>65.6%</td><td>65.6%</td><td>65.6%</td><td>70.3%</td><td>76.6%</td><td>81.3%</td></tr>
-      <tr><td>高確へ</td><td>1.6%</td><td>1.6%</td><td>2.0%</td><td>3.1%</td><td>6.3%</td><td>7.8%</td></tr>
-      <tr><td rowspan="2">チャンス</td><td>通常へ</td><td>50.0%</td><td>50.0%</td><td>50.0%</td><td>50.0%</td><td>50.0%</td><td>50.0%</td></tr>
-      <tr><td>高確へ</td><td>21.9%</td><td>22.3%</td><td>22.7%</td><td>25.0%</td><td>31.3%</td><td>37.5%</td></tr>
-      <tr><td rowspan="2">強チェ</td><td>通常へ</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td></tr>
-      <tr><td>高確へ</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td></tr>
+      <tr><td rowspan="3">弱チェ</td><td>維持</td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td><td>52.0<span class="pct">%</span></td><td>48.4<span class="pct">%</span></td><td>37.5<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>46.1<span class="pct">%</span></td><td>46.1<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>59.4<span class="pct">%</span></td><td>62.5<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>0.8<span class="pct">%</span></td><td>0.8<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.6<span class="pct">%</span></td><td>3.1<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td></tr>
+      <tr><td rowspan="3">スイカ</td><td>維持</td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td><td>32.4<span class="pct">%</span></td><td>26.6<span class="pct">%</span></td><td>17.2<span class="pct">%</span></td><td>10.9<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>65.6<span class="pct">%</span></td><td>65.6<span class="pct">%</span></td><td>65.6<span class="pct">%</span></td><td>70.3<span class="pct">%</span></td><td>76.6<span class="pct">%</span></td><td>81.3<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>1.6<span class="pct">%</span></td><td>1.6<span class="pct">%</span></td><td>2.0<span class="pct">%</span></td><td>3.1<span class="pct">%</span></td><td>6.3<span class="pct">%</span></td><td>7.8<span class="pct">%</span></td></tr>
+      <tr><td rowspan="3">チャンス</td><td>維持</td><td>28.1<span class="pct">%</span></td><td>27.7<span class="pct">%</span></td><td>27.3<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>18.8<span class="pct">%</span></td><td>12.5<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>50.0<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>21.9<span class="pct">%</span></td><td>22.3<span class="pct">%</span></td><td>22.7<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td><td>37.5<span class="pct">%</span></td></tr>
+      <tr><td rowspan="3">強チェ</td><td>維持</td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td></tr>
     </table>
 
     <h4 style="font-size:12px; margin: 4px 0;">【通常滞在時】</h4>
-    <table class="info-table">
+    <table class="info-table" style="margin-bottom: 5px;">
       <tr><th>契機</th><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>弱チェ</td><td>高確へ</td><td>46.9%</td><td>46.9%</td><td>46.9%</td><td>46.9%</td><td>46.9%</td><td>46.9%</td></tr>
-      <tr><td>スイカ</td><td>高確へ</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td></tr>
-      <tr><td>チャンス</td><td>高確へ</td><td>71.9%</td><td>71.9%</td><td>71.9%</td><td>71.9%</td><td>71.9%</td><td>71.9%</td></tr>
-      <tr><td>強チェ</td><td>高確へ</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td></tr>
-      <tr><td>ハズレ/ベル</td><td>低確へ</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td></tr>
+      <tr><td rowspan="2">弱チェ</td><td>維持</td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td><td>53.1<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>46.9<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td></tr>
+      <tr><td rowspan="2">スイカ</td><td>維持</td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td></tr>
+      <tr><td rowspan="2">チャンス</td><td>維持</td><td>28.1<span class="pct">%</span></td><td>28.1<span class="pct">%</span></td><td>28.1<span class="pct">%</span></td><td>28.1<span class="pct">%</span></td><td>28.1<span class="pct">%</span></td><td>28.1<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>71.9<span class="pct">%</span></td><td>71.9<span class="pct">%</span></td><td>71.9<span class="pct">%</span></td><td>71.9<span class="pct">%</span></td><td>71.9<span class="pct">%</span></td><td>71.9<span class="pct">%</span></td></tr>
+      <tr><td rowspan="2">強チェ</td><td>維持</td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td><td>0<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td></tr>
     </table>
-
-    <h4 style="font-size:12px; margin: 4px 0;">【高確滞在時】</h4>
-    <table class="info-table">
-      <tr><th>契機</th><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>ハズレ/ベル</td><td>通常へ</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td><td>2.3%</td></tr>
-    </table>
+    <p style="font-size:11px; margin: 0 0 15px 4px; color:#555;">※ハズレ・ベル成立時は、通常・高確滞在時のみ一律 2.3<span class="pct">%</span> で一段階転落（高確→通常、通常→低確）します。</p>
 
     <h3 class="info-modal-h3">2. 天破抽選</h3>
     <h4 style="font-size:12px; margin: 4px 0;">【低確・通常滞在時】</h4>
     <table class="info-table">
       <tr><th>契機</th><th>状態</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>弱チェ・スイカ</td><td>低・通</td><td>0.8%</td><td>0.8%</td><td>1.6%</td><td>2.3%</td><td>3.5%</td><td>4.7%</td></tr>
-      <tr><td rowspan="2">チャンス目</td><td>低確</td><td>2.0%</td><td>2.7%</td><td>3.1%</td><td>3.9%</td><td>4.7%</td><td>6.3%</td></tr>
-      <tr><td>通常</td><td>10.2%</td><td>10.5%</td><td>10.9%</td><td>12.5%</td><td>15.6%</td><td>18.8%</td></tr>
-      <tr><td>強チェ</td><td>低・通</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td></tr>
+      <tr><td>弱チェ・スイカ</td><td>低・通</td><td>0.8<span class="pct">%</span></td><td>0.8<span class="pct">%</span></td><td>1.6<span class="pct">%</span></td><td>2.3<span class="pct">%</span></td><td>3.5<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td></tr>
+      <tr><td rowspan="2">チャンス目</td><td>低確</td><td>2.0<span class="pct">%</span></td><td>2.7<span class="pct">%</span></td><td>3.1<span class="pct">%</span></td><td>3.9<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td><td>6.3<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>10.2<span class="pct">%</span></td><td>10.5<span class="pct">%</span></td><td>10.9<span class="pct">%</span></td><td>12.5<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td><td>18.8<span class="pct">%</span></td></tr>
+      <tr><td>強チェ</td><td>低・通</td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td></tr>
     </table>
 
     <h4 style="font-size:12px; margin: 4px 0;">【高確滞在時】</h4>
     <table class="info-table">
       <tr><th>契機</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>弱チェ・スイカ</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td><td>31.3%</td></tr>
-      <tr><td>チャンス目</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td><td>66.4%</td></tr>
-      <tr><td>強チェ</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td></tr>
+      <tr><td>弱チェ・スイカ</td><td>31.3<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td><td>31.3<span class="pct">%</span></td></tr>
+      <tr><td>チャンス目</td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td><td>66.4<span class="pct">%</span></td></tr>
+      <tr><td>強チェ</td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td></tr>
     </table>
 
     <h4 style="font-size:12px; margin: 4px 0;">【伝承モード滞在時】</h4>
     <table class="info-table">
       <tr><th>契機</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>弱チェ</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td><td>25.0%</td></tr>
-      <tr><td>スイカ</td><td>33.6%</td><td>33.6%</td><td>33.6%</td><td>33.6%</td><td>33.6%</td><td>33.6%</td></tr>
-      <tr><td>チャンス目</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td><td>75.0%</td></tr>
-      <tr><td>強チェ</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td></tr>
-      <tr><td>ハズレ</td><td>10.0%</td><td>10.0%</td><td>10.0%</td><td>10.0%</td><td>10.0%</td><td>10.0%</td></tr>
-      <tr><td>ベル</td><td>15.6%</td><td>15.6%</td><td>15.6%</td><td>15.6%</td><td>15.6%</td><td>15.6%</td></tr>
+      <tr><td>弱チェ</td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td><td>25.0<span class="pct">%</span></td></tr>
+      <tr><td>スイカ</td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td><td>33.6<span class="pct">%</span></td></tr>
+      <tr><td>チャンス目</td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td><td>75.0<span class="pct">%</span></td></tr>
+      <tr><td>強チェ</td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td><td>100<span class="pct">%</span></td></tr>
+      <tr><td>ハズレ</td><td>10.0<span class="pct">%</span></td><td>10.0<span class="pct">%</span></td><td>10.0<span class="pct">%</span></td><td>10.0<span class="pct">%</span></td><td>10.0<span class="pct">%</span></td><td>10.0<span class="pct">%</span></td></tr>
+      <tr><td>ベル</td><td>15.6<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td><td>15.6<span class="pct">%</span></td></tr>
     </table>
 
     <h3 class="info-modal-h3">3. 伝承モード移行抽選</h3>
     <h4 style="font-size:12px; margin: 4px 0;">【初当たり時 伝承振り分け・転落率】</h4>
     <table class="info-table">
       <tr><th>項目</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
-      <tr><td>ショート振分</td><td>98.4%</td><td>98.4%</td><td>98.4%</td><td>98.4%</td><td>98.4%</td><td>98.4%</td></tr>
-      <tr><td>ミドル振分</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td></tr>
-      <tr><td>ロング振分</td><td>0.4%</td><td>0.4%</td><td>0.4%</td><td>0.4%</td><td>0.4%</td><td>0.4%</td></tr>
-      <tr><td>ショート転落</td><td>32.8%</td><td>32.8%</td><td>32.8%</td><td>32.8%</td><td>32.8%</td><td>32.8%</td></tr>
-      <tr><td>ミドル転落</td><td>4.7%</td><td>4.7%</td><td>4.7%</td><td>4.7%</td><td>4.7%</td><td>4.7%</td></tr>
-      <tr><td>ロング転落</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td><td>1.2%</td></tr>
+      <tr><td>ショート振分</td><td>98.4<span class="pct">%</span></td><td>98.4<span class="pct">%</span></td><td>98.4<span class="pct">%</span></td><td>98.4<span class="pct">%</span></td><td>98.4<span class="pct">%</span></td><td>98.4<span class="pct">%</span></td></tr>
+      <tr><td>ミドル振分</td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td></tr>
+      <tr><td>ロング振分</td><td>0.4<span class="pct">%</span></td><td>0.4<span class="pct">%</span></td><td>0.4<span class="pct">%</span></td><td>0.4<span class="pct">%</span></td><td>0.4<span class="pct">%</span></td><td>0.4<span class="pct">%</span></td></tr>
+      <tr><td>ショート転落</td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td><td>32.8<span class="pct">%</span></td></tr>
+      <tr><td>ミドル転落</td><td>4.7<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td><td>4.7<span class="pct">%</span></td></tr>
+      <tr><td>ロング転落</td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td><td>1.2<span class="pct">%</span></td></tr>
     </table>
 
+    <h4 style="font-size:12px; margin: 4px 0;">【伝承モード終了時の状態移行】</h4>
+    <table class="info-table">
+      <tr><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+      <tr><td>低確</td><td>71.9<span class="pct">%</span></td><td>71.1<span class="pct">%</span></td><td>70.3<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td><td>43.8<span class="pct">%</span></td><td>39.1<span class="pct">%</span></td></tr>
+      <tr><td>通常</td><td>25.0<span class="pct">%</span></td><td>25.4<span class="pct">%</span></td><td>25.8<span class="pct">%</span></td><td>42.2<span class="pct">%</span></td><td>46.9<span class="pct">%</span></td><td>50.0<span class="pct">%</span></td></tr>
+      <tr><td>高確</td><td>3.1<span class="pct">%</span></td><td>3.5<span class="pct">%</span></td><td>3.9<span class="pct">%</span></td><td>7.8<span class="pct">%</span></td><td>9.4<span class="pct">%</span></td><td>10.9<span class="pct">%</span></td></tr>
     <h4 style="font-size:12px; margin: 4px 0;">【伝承モード終了時の状態移行】</h4>
     <table class="info-table">
       <tr><th>移行先</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
