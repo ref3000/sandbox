@@ -97,35 +97,33 @@
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【AT中ボイス】</summary>
   <div class="b-container">
-    <button onclick="apply('voice_f')" class="b-red">女性</button>
-    <button onclick="apply('voice_m')" class="b-blue">男性</button>
-    <button onclick="apply('voice_mumei_shukon')" class="b-red">無名<br>ｼｭｺﾝ</button>
-    <button onclick="apply('voice_ayame')" class="b-yellow">菖蒲<br>お饅頭</button>
-    <button onclick="apply('voice_ikoma')" class="b-green">生駒<br>誇り</button>
-    <button onclick="apply('voice_kurusu')" class="b-blue">来栖<br>あの世</button>
+    <button onclick="apply('voice_f')" class="b-red" id="btn_voice_f">女性</button>
+    <button onclick="apply('voice_m')" class="b-blue" id="btn_voice_m">男性</button>
+    <button onclick="apply('voice_mumei_shukon')" class="b-red" id="btn_voice_mumei_shukon">無名<br>ｼｭｺﾝ</button>
+    <button onclick="apply('voice_ayame')" class="b-yellow" id="btn_voice_ayame">菖蒲<br>お饅頭</button>
+    <button onclick="apply('voice_ikoma')" class="b-green" id="btn_voice_ikoma">生駒<br>誇り</button>
+    <button onclick="apply('voice_kurusu')" class="b-blue" id="btn_voice_kurusu">来栖<br>あの世</button>
   </div>
   <div class="b-container">
-    <button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故言わ</button>
-    <button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人カバネ</button>
-    <button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>今年最後</button>
-    <button onclick="apply('voice_mumei_futsu')" class="b-red">無名<br>この台</button>
-    <button onclick="apply('voice_none')" class="b-gray">ボイス<br>なし</button>
+    <button onclick="apply('voice_kage_naze')" class="b-dark" id="btn_voice_kage_naze">景行<br>何故言わ</button>
+    <button onclick="apply('voice_kage_hito')" class="b-dark" id="btn_voice_kage_hito">景行<br>人カバネ</button>
+    <button onclick="apply('voice_kage_kotoshi')" class="b-dark" id="btn_voice_kage_kotoshi">景行<br>今年最後</button>
+    <button onclick="apply('voice_mumei_futsu')" class="b-red" id="btn_voice_mumei_futsu">無名<br>この台</button>
+    <button onclick="apply('voice_none')" class="b-gray" id="btn_voice_none">ボイス<br>なし</button>
     <div style="width: 50px;"></div>
   </div>
-  <div style="text-align: right; margin: 4px 10px 8px; font-size: 11px; font-weight: bold; color: #555;" id="voice_total_count">総カウント: 0</div>
 </details>
 
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【キャラ紹介・ST終了画面等】</summary>
   <div class="b-container">
-    <button onclick="apply('char_f')" class="b-red">キャラ<br>女性</button>
-    <button onclick="apply('char_m')" class="b-blue">キャラ<br>男性</button>
-    <button onclick="apply('char_biba')" class="b-purple">キャラ<br>美馬</button>
-    <button onclick="apply('st_default')" class="b-gray">ST画面<br>デフォ</button>
-    <button onclick="apply('st_shugo')" class="b-yellow">ST画面<br>集合</button>
-    <button onclick="apply('st_mizugi')" class="b-blue">ST画面<br>水着</button>
+    <button onclick="apply('char_f')" class="b-red" id="btn_char_f">キャラ<br>女性</button>
+    <button onclick="apply('char_m')" class="b-blue" id="btn_char_m">キャラ<br>男性</button>
+    <button onclick="apply('char_biba')" class="b-purple" id="btn_char_biba">キャラ<br>美馬</button>
+    <button onclick="apply('st_default')" class="b-gray" id="btn_st_default">ST画面<br>デフォ</button>
+    <button onclick="apply('st_shugo')" class="b-yellow" id="btn_st_shugo">ST画面<br>集合</button>
+    <button onclick="apply('st_mizugi')" class="b-blue" id="btn_st_mizugi">ST画面<br>水着</button>
   </div>
-  <div style="text-align: right; margin: 4px 10px 8px; font-size: 11px; font-weight: bold; color: #555;" id="char_total_count">総カウント: 0</div>
 </details>
 
 
@@ -187,6 +185,15 @@
   const decompressMap = {};
   for(let k in compressMap) decompressMap[compressMap[k]] = k;
 
+  const baseLabels = {
+    "voice_f": "女性", "voice_m": "男性", "voice_mumei_shukon": "無名<br>ｼｭｺﾝ",
+    "voice_ayame": "菖蒲<br>お饅頭", "voice_ikoma": "生駒<br>誇り", "voice_kurusu": "来栖<br>あの世",
+    "voice_kage_naze": "景行<br>何故言わ", "voice_kage_hito": "景行<br>人カバネ", "voice_kage_kotoshi": "景行<br>今年最後",
+    "voice_mumei_futsu": "無名<br>この台", "voice_none": "ボイス<br>なし",
+    "char_f": "キャラ<br>女性", "char_m": "キャラ<br>男性", "char_biba": "キャラ<br>美馬",
+    "st_default": "ST画面<br>デフォ", "st_shugo": "ST画面<br>集合", "st_mizugi": "ST画面<br>水着"
+  };
+
   let currentMumeiPts = 0;
   let currentIkomaPts = 0;
 
@@ -197,7 +204,6 @@
     let bellK = 0;
     let mumeiOffCount = 0, mumeiLitCount = 0;
     let ikomaOffCount = 0, ikomaLitCount = 0;
-    let voiceTot = 0, charTot = 0;
     
     history.forEach(item => {
       const h = item.t;
@@ -209,8 +215,6 @@
       if (h === 'mumei_lit') mumeiLitCount += c;
       if (h === 'ikoma_off') ikomaOffCount += c;
       if (h === 'ikoma_lit') ikomaLitCount += c;
-      if (h.startsWith('voice_')) voiceTot += c;
-      if (h.startsWith('char_') || h.startsWith('st_')) charTot += c;
 
       if (h === 'mumei_off' || h === 'mumei_on') currentMumeiPts += 1 * c;
       else if (h === 'mumei_lit' || h === 'mumei_high' || h === 'combo_mumei') currentMumeiPts += 15 * c;
@@ -331,12 +335,6 @@
       else iLitDiv.textContent = `生駒発光: -`;
     }
 
-    const vTotDiv = document.getElementById("voice_total_count");
-    if (vTotDiv) vTotDiv.textContent = `総カウント: ${voiceTot}`;
-    
-    const cTotDiv = document.getElementById("char_total_count");
-    if (cTotDiv) cTotDiv.textContent = `総カウント: ${charTot}`;
-
     updateURL();
     updateUI();
   }
@@ -383,6 +381,19 @@
   function historyDown(i) { if (i <= 0) return; [history[i], history[i-1]] = [history[i-1], history[i]]; calcHistory(); }
 
   function updateUI() {
+    let counts = {};
+    history.forEach(item => { counts[item.t] = (counts[item.t] || 0) + item.c; });
+    for (let k in baseLabels) {
+      const btn = document.getElementById("btn_" + k);
+      if (btn) {
+        if (counts[k]) {
+          btn.innerHTML = baseLabels[k] + `<br><span style="font-size:11px; color:#ddd">${counts[k]}</span>`;
+        } else {
+          btn.innerHTML = baseLabels[k];
+        }
+      }
+    }
+
     let totalSr = sr.reduce((a, b) => a.plus(b), BigNumber(0));
     for (let s = 0; s < S; s++) {
       const p = totalSr.isZero() ? "0.00" : sr[s].dividedBy(totalSr).times(100).toFixed(2);
