@@ -380,7 +380,7 @@
     for (let k in compressMap) {
       const cntDiv = document.getElementById("cnt_" + k);
       if (cntDiv) {
-        cntDiv.textContent = counts[k] ? counts[k] : "";
+        cntDiv.textContent = counts[k] || 0;
       }
     }
 
