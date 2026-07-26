@@ -26,6 +26,9 @@
   .history-item { border-bottom: 1px solid #eee; padding: 4px; display: flex; justify-content: space-between; align-items: center; }
   .history-bt { width: 24px; height: 24px; font-size: 10px; margin-left: 2px; border: 1px solid #999; border-radius: 2px; background: #fff; cursor: pointer; }
   .history-label { flex-grow: 1; margin-left: 4px; }
+  .btn-wrap { width: 22%; display: flex; flex-direction: column; align-items: center; }
+  .btn-wrap button { width: 100%; box-sizing: border-box; }
+  .btn-cnt { font-size: 11px; color: #555; margin-top: 2px; font-weight: bold; min-height: 14px; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/8.1.1/bignumber.min.js"></script>
 </head>
@@ -97,32 +100,32 @@
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【AT中ボイス】</summary>
   <div class="b-container">
-    <button onclick="apply('voice_f')" class="b-red" id="btn_voice_f">女性</button>
-    <button onclick="apply('voice_m')" class="b-blue" id="btn_voice_m">男性</button>
-    <button onclick="apply('voice_mumei_shukon')" class="b-red" id="btn_voice_mumei_shukon">無名<br>ｼｭｺﾝ</button>
-    <button onclick="apply('voice_ayame')" class="b-yellow" id="btn_voice_ayame">菖蒲<br>お饅頭</button>
-    <button onclick="apply('voice_ikoma')" class="b-green" id="btn_voice_ikoma">生駒<br>誇り</button>
-    <button onclick="apply('voice_kurusu')" class="b-blue" id="btn_voice_kurusu">来栖<br>あの世</button>
+    <div class="btn-wrap"><button onclick="apply('voice_f')" class="b-red">女性</button><div class="btn-cnt" id="cnt_voice_f"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_m')" class="b-blue">男性</button><div class="btn-cnt" id="cnt_voice_m"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_mumei_shukon')" class="b-red">無名<br>ｼｭｺﾝ</button><div class="btn-cnt" id="cnt_voice_mumei_shukon"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_ayame')" class="b-yellow">菖蒲<br>お饅頭</button><div class="btn-cnt" id="cnt_voice_ayame"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_ikoma')" class="b-green">生駒<br>誇り</button><div class="btn-cnt" id="cnt_voice_ikoma"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_kurusu')" class="b-blue">来栖<br>あの世</button><div class="btn-cnt" id="cnt_voice_kurusu"></div></div>
   </div>
   <div class="b-container">
-    <button onclick="apply('voice_kage_naze')" class="b-dark" id="btn_voice_kage_naze">景行<br>何故言わ</button>
-    <button onclick="apply('voice_kage_hito')" class="b-dark" id="btn_voice_kage_hito">景行<br>人カバネ</button>
-    <button onclick="apply('voice_kage_kotoshi')" class="b-dark" id="btn_voice_kage_kotoshi">景行<br>今年最後</button>
-    <button onclick="apply('voice_mumei_futsu')" class="b-red" id="btn_voice_mumei_futsu">無名<br>この台</button>
-    <button onclick="apply('voice_none')" class="b-gray" id="btn_voice_none">ボイス<br>なし</button>
-    <div style="width: 50px;"></div>
+    <div class="btn-wrap"><button onclick="apply('voice_kage_naze')" class="b-dark">景行<br>何故言わ</button><div class="btn-cnt" id="cnt_voice_kage_naze"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_kage_hito')" class="b-dark">景行<br>人カバネ</button><div class="btn-cnt" id="cnt_voice_kage_hito"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_kage_kotoshi')" class="b-dark">景行<br>今年最後</button><div class="btn-cnt" id="cnt_voice_kage_kotoshi"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_mumei_futsu')" class="b-red">無名<br>この台</button><div class="btn-cnt" id="cnt_voice_mumei_futsu"></div></div>
+    <div class="btn-wrap"><button onclick="apply('voice_none')" class="b-gray">ボイス<br>なし</button><div class="btn-cnt" id="cnt_voice_none"></div></div>
+    <div style="width: 22%;"></div>
   </div>
 </details>
 
 <details open>
   <summary style="font-size:11px; margin:8px 0 2px 4px; font-weight:bold; color:#555; cursor:pointer;">【キャラ紹介・ST終了画面等】</summary>
   <div class="b-container">
-    <button onclick="apply('char_f')" class="b-red" id="btn_char_f">キャラ<br>女性</button>
-    <button onclick="apply('char_m')" class="b-blue" id="btn_char_m">キャラ<br>男性</button>
-    <button onclick="apply('char_biba')" class="b-purple" id="btn_char_biba">キャラ<br>美馬</button>
-    <button onclick="apply('st_default')" class="b-gray" id="btn_st_default">ST画面<br>デフォ</button>
-    <button onclick="apply('st_shugo')" class="b-yellow" id="btn_st_shugo">ST画面<br>集合</button>
-    <button onclick="apply('st_mizugi')" class="b-blue" id="btn_st_mizugi">ST画面<br>水着</button>
+    <div class="btn-wrap"><button onclick="apply('char_f')" class="b-red">キャラ<br>女性</button><div class="btn-cnt" id="cnt_char_f"></div></div>
+    <div class="btn-wrap"><button onclick="apply('char_m')" class="b-blue">キャラ<br>男性</button><div class="btn-cnt" id="cnt_char_m"></div></div>
+    <div class="btn-wrap"><button onclick="apply('char_biba')" class="b-purple">キャラ<br>美馬</button><div class="btn-cnt" id="cnt_char_biba"></div></div>
+    <div class="btn-wrap"><button onclick="apply('st_default')" class="b-gray">ST画面<br>デフォ</button><div class="btn-cnt" id="cnt_st_default"></div></div>
+    <div class="btn-wrap"><button onclick="apply('st_shugo')" class="b-yellow">ST画面<br>集合</button><div class="btn-cnt" id="cnt_st_shugo"></div></div>
+    <div class="btn-wrap"><button onclick="apply('st_mizugi')" class="b-blue">ST画面<br>水着</button><div class="btn-cnt" id="cnt_st_mizugi"></div></div>
   </div>
 </details>
 
@@ -184,15 +187,6 @@
   };
   const decompressMap = {};
   for(let k in compressMap) decompressMap[compressMap[k]] = k;
-
-  const baseLabels = {
-    "voice_f": "女性", "voice_m": "男性", "voice_mumei_shukon": "無名<br>ｼｭｺﾝ",
-    "voice_ayame": "菖蒲<br>お饅頭", "voice_ikoma": "生駒<br>誇り", "voice_kurusu": "来栖<br>あの世",
-    "voice_kage_naze": "景行<br>何故言わ", "voice_kage_hito": "景行<br>人カバネ", "voice_kage_kotoshi": "景行<br>今年最後",
-    "voice_mumei_futsu": "無名<br>この台", "voice_none": "ボイス<br>なし",
-    "char_f": "キャラ<br>女性", "char_m": "キャラ<br>男性", "char_biba": "キャラ<br>美馬",
-    "st_default": "ST画面<br>デフォ", "st_shugo": "ST画面<br>集合", "st_mizugi": "ST画面<br>水着"
-  };
 
   let currentMumeiPts = 0;
   let currentIkomaPts = 0;
@@ -383,14 +377,10 @@
   function updateUI() {
     let counts = {};
     history.forEach(item => { counts[item.t] = (counts[item.t] || 0) + item.c; });
-    for (let k in baseLabels) {
-      const btn = document.getElementById("btn_" + k);
-      if (btn) {
-        if (counts[k]) {
-          btn.innerHTML = baseLabels[k] + `<br><span style="font-size:11px; color:#ddd">${counts[k]}</span>`;
-        } else {
-          btn.innerHTML = baseLabels[k];
-        }
+    for (let k in compressMap) {
+      const cntDiv = document.getElementById("cnt_" + k);
+      if (cntDiv) {
+        cntDiv.textContent = counts[k] ? counts[k] : "";
       }
     }
 
